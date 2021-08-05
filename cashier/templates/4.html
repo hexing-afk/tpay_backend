@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="/assets/static/img/favicon.ico"
+          type="image/x-icon">
+    <link rel="stylesheet" href="/assets/static/css/phone_new.css">
+    <script src="/assets/static/js/jquery-3.6.0.min.js"></script>
+    <script>
+    </script>
+</head>
+<body>
+<div class="content">
+
+    <div class="header">
+        <div class="do-return" data-ref="" data-locked="false"></div>
+        <p class="dn title_android" id="title_tips" style="display: block;">银行卡付款</p>
+        <p class="paytimeout_tips" id="paytimeout_tips" style="display: none;"></p>
+    </div>
+    <div class="gray-solid-line grey"></div>
+    <div id="preAuth" class=""></div>
+    <div id="upopNoticeInfo">
+    </div>
+    <div class="pos_notify dn" id="pos_notify">
+        <span>●</span>
+        <div id="upgg_location-215" data-upgg-state="1" class=" upgg_container"
+             style="background: url(&quot;/assets/static/img/loading.gif&quot;) center center no-repeat transparent;"></div>
+    </div>
+
+    <div class="container">
+        <div class="order-list-wrapper">
+            <div class="order-list-block">
+                <div class="order-list" id="orderList">
+                    <p class="order-item-pay-amount">¥<span id="order-item-pay-amount">{{.amount}}</span></p>
+                    <p class="order-item-origin-amount">¥<span id="order-item-origin-amount">{{.amount}}</span></p>
+                    <p class="order-item fold"><label>交易时间</label><span>{{.create_time}}</span></p>
+                    <p class="order-item fold"><label>订单编号</label><span>{{.order_no}}</span></p>
+                    <div class="btn-show-order-dash grey fold"></div>
+                </div>
+                <!--下拉-->
+                <div class="order-list-block-xl hide" id="order-list-block-show"></div>
+            </div>
+            <div class="order-status hide">
+                <p></p>
+            </div>
+            <!--<p class="">点击查看所有订单信息</p>-->
+        </div>
+        <div class="promotion-list" id="new_promotion" style="display: none;">
+        </div>
+        <div class="new_yellow_msg dn" id="yellow-msg" style="display: none;"><span></span></div>
+        <div class="new_error_msg dn" id="error-msg" style="display: none;"><span></span></div>
+        <div class="instalment-list" id="new_instalment" style=""></div>
+    </div>
+</div>
+<div id="slider-wrapper" style="height: 236px;">
+    <div class="overflow-wrapper" id="overflow-wrapper" style="margin-left: 0%;">
+        <div class="main-container slide" id="main-container">
+            <div class="form-container">
+                支付已提交，请等待。。。
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="loading-block hide">
+    <div class="overlay"></div>
+    <p>
+        <img class="logobg" src="/assets/static/img/load_logo.gif"></p>
+</div>
+
+</body>
+</html>

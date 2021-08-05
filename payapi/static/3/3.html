@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- saved from url=(0241)https://mcashiermd.95516.com/mobile/zh_CN/index.action?sign=b75babcdf4f51abf3840d0a2924bc6da&transNumber=549507997725791049105&internalLogId=ACP021052616403142c50087428677&locale=zh_CN&agent=phone&locale=zh_CN#!cardIndex?r=0.7837133683961237 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>中国银联</title>
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="https://acpstatic.95516.com/gw/mobile/resources/upop_m/favicon.ico" type="image/x-icon">
+    <script type="text/javascript" src="./3_files/zepto.min.js.下载"></script>
+    <link rel="stylesheet" href="./3_files/phone_new.css">
+
+    <style type="text/css">
+        .error_result_msg {
+            text-indent: 50px;
+            background: url("../resources/upop_m/zh_CN/images/phone/err.png") left top no-repeat;
+            background-size: 40px;
+            display: inline-block;
+            vertical-align: middle
+        }
+
+        .error_result_msg_success_icon {
+            text-indent: 50px;
+            background: url("../resources/upop_m/zh_CN/images/phone/result_success_new.png") left top no-repeat;
+            background-size: 40px;
+            display: inline-block;
+            vertical-align: middle
+        }
+
+    </style>
+</head>
+<body>
+<div class="content">
+
+    <div class="header">
+        <p class="title dn" id="title_tips" style="display: block">
+            中国银联
+        </p>
+    </div>
+
+
+    <div class="container">
+
+
+        <div id="slider-wrapper">
+            <div class="overflow-wrapper" id="overflow-wrapper">
+                <div class="main-container slide" id="main-container">
+
+                    <div class="pay_success" id="pay_success">
+                        <div class="pay_img_div">
+                                                            <span class="error_result_msg">商户订单已失效，请返回商户页面重新发起支付[5101905]</span>
+                                                    </div>
+                                            </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<script type="text/javascript">
+    var getTnFromAddr = function (name) {
+        var paramUrl = window.location.search.substr(1);
+        var paramStrs = paramUrl.split('&');
+        var params = {};
+        for (var index = 0; index < paramStrs.length; index++) {
+            params[paramStrs[index].split('=')[0]] = decodeURI(paramStrs[index].split('=')[1]);
+        }
+        return params[name];
+    };
+
+    var getTouchEventType = function () {
+        var isSupportTouch = "ontouchstart" in document.documentElement;
+        var eventType = "click";
+        if (isSupportTouch) {
+            eventType = "touchstart";
+        }
+        return eventType;
+    };
+
+    window.tn = getTnFromAddr("transNumber") || "";
+    window.orderStatus = '$orderStatus';
+
+
+    window.http_proto = window.location.href.split("/")[0] + '//';
+    $("#return_merchant_success").on(getTouchEventType(), function () {
+        window.location.href = window.http_proto + location.host + '/mobile/' + 'callback.action?transNumber=' + window.tn;
+    });
+</script>
+
+</body></html>

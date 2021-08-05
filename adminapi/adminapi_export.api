@@ -1,0 +1,141 @@
+syntax = "v1"
+
+info(
+    title: "type title here"
+    desc: "type desc here"
+    author: "type author here"
+    email: "type email here"
+    version: "type version here"
+)
+
+@server(
+    group: export
+    middleware: CheckLogin
+)
+service adminapi-api {
+    // 代收订单导出
+    @handler PayOrderExport
+    get /order/pay/export (PayOrderExportRequest) returns (PayOrderExportResponse)
+
+    // 代付订单导出
+    @handler TransferOrderExport
+    get /order/transfer/export (TransferOrderExportRequest) returns (TransferOrderExportResponse)
+
+    // 钱包流水导出
+    @handler WalletLogExport
+    get /merchant/wallet-log/export (WalletLogExportRequest) returns (WalletLogExportResponse)
+}
+
+// 代收订单导出
+type (
+    PayOrderExportRequest {
+        OrderNo string `form:"order_no,optional"`
+        MerchantOrderNo string `form:"merchant_order_no,optional"`
+        UpstreamOrderNo string `form:"upstream_order_no,optional"`
+        MerchantName string `form:"merchant_name,optional"`
+        Currency string `form:"currency"`
+        ChannelId int64 `form:"channel_id,optional"`
+        StartCreateTime int64 `form:"start_create_time,optional"`
+        EndCreateTime int64 `form:"end_create_time,optional"`
+        OrderStatus int64 `form:"order_status,optional"`
+    }
+
+    PayOrderExportResponse {
+        Total int64 `json:"total"`
+        TotalReqAmount int64 `json:"total_req_amount"`
+        TotalPayAmount int64 `json:"total_pay_amount"`
+        TotalFee int64 `json:"total_fee"`
+        TotalIncreaseAmount int64 `json:"total_increase_amount"`
+        IsDivideHundred bool `json:"is_divide_hundred"`
+        List []PayOrderExportData `json:"list"`
+    }
+
+    PayOrderExportData {
+        Id int64 `json:"id"`
+        MerchantName string `json:"merchant_name"`
+        OrderNo string `json:"order_no"`
+        MerchantOrderNo string `json:"merchant_order_no"`
+        ReqAmount int64 `json:"req_amount"`
+        PaymentAmount int64 `json:"payment_amount"`
+        Rate float64 `json:"rate"`
+        SingleFee int64 `json:"single_fee"`
+        Fee int64 `json:"fee"`
+        IncreaseAmount int64 `json:"increase_amount"`
+        ChannelName string `json:"channel_name"`
+        OrderStatus string `json:"order_status"`
+        CreateTime int64 `json:"create_time"`
+        UpdateTime int64 `json:"update_time"`
+    }
+)
+
+// 代付订单导出
+type (
+    TransferOrderExportRequest {
+        StartCreateTime int64 `form:"start_create_time,optional"`
+        EndCreateTime int64 `form:"end_create_time,optional"`
+        OrderNo string `form:"order_no,optional"`
+        MerchantOrderNo string `form:"merchant_order_no,optional"`
+        UpstreamOrderNo string `form:"upstream_order_no,optional"`
+        MerchantName string `form:"merchant_name,optional"`
+        Currency string `form:"currency"`
+        ChannelId int64 `form:"channel_id,optional"`
+        OrderStatus int64 `form:"order_status,optional"`
+    }
+
+    TransferOrderExportResponse {
+        Total int64 `json:"total"`
+        TotalReqAmount int64 `json:"total_req_amount"`
+        TotalFee int64 `json:"total_fee"`
+        TotalIncreaseAmount int64 `json:"total_increase_amount"`
+        IsDivideHundred bool `json:"is_divide_hundred"`
+        List []TransferOrderExportData `json:"list"`
+    }
+
+    TransferOrderExportData {
+        Id int64 `json:"id"`
+        MerchantName string `json:"merchant_name"`
+        OrderNo string `json:"order_no"`
+        MerchantOrderNo string `json:"merchant_order_no"`
+        ReqAmount int64 `json:"req_amount"`
+        Rate float64 `json:"rate"`
+        SingleFee int64 `json:"single_fee"`
+        Fee int64 `json:"fee"`
+        IncreaseAmount int64 `json:"increase_amount"`
+        ChannelName string `json:"channel_name"`
+        OrderStatus string `json:"order_status"`
+        CreateTime int64 `json:"create_time"`
+        UpdateTime int64 `json:"update_time"`
+    }
+)
+
+// 钱包流水导出
+type (
+    WalletLogExportRequest {
+        SerialNo int64 `form:"serial_no,optional"`
+        BusinessNo string `form:"business_no,optional"`
+        MerchantAccount string `form:"merchant_account,optional"`
+        OpType int64 `form:"op_type,optional"`
+        OrderType int64 `form:"order_type,optional"`
+        Currency string `form:"currency"`
+        StartCreateTime int64 `form:"start_create_time,optional"`
+        EndCreateTime int64 `form:"end_create_time,optional"`
+        IdOrBusinessNo string `form:"id_or_business_no,optional"`
+    }
+
+    WalletLogExportResponse {
+        Total int64 `json:"total"`
+        IsDivideHundred bool `json:"is_divide_hundred"`
+        List []WalletLogExportData `json:"list"`
+    }
+
+    WalletLogExportData {
+        Id int64 `json:"id"`
+        BusinessNo string `json:"business_no"`    //业务单号:(充值；提现；代付；收款)
+        ChangeAmount int64 `json:"change_amount"` //变动金额
+        AfterBalance int64 `json:"after_balance"` //变动后余额
+        OpType string `json:"op_type"`            //变动类型：1+，2-
+        OrderType string `json:"order_type"`      //变动来源：1-手动调账；2-充值；3-提现；4-代付；5-收款；
+        Remark string `json:"remark"`             //备注
+        CreateTime int64 `json:"create_time"`     //创建时间
+    }
+)

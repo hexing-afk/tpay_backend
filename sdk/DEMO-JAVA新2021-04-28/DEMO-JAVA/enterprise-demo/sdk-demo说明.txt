@@ -1,0 +1,38 @@
+【环境配置】
+jdk1.8
+maven 3.5
+-------------------------------------------------------------------------------
+【外放网关域名】
+说明     service_id               
+聚合支付                         tf56pay.gateway.multiPay 
+商户批量代付到银行卡             tf56enterprise.batchPay.payApply
+商户代付到银行卡                 tf56pay.enterprise.payForCustomer
+商户代付到账户                   tf56enterprise.singlePay.payAccountApply
+查询商户支付账号余额             tf56pay.enterprise.queryEnterpriseAccountBanlance
+分页查询交易记录接口             tf56pay.enterprise.queryTransactionDetails
+商户批量代付结果查询             tf56enterprise.batchPay.resultQuery
+【代付】查询商户交易结果         tf56pay.enterprise.queryTradeStatus
+【收银台】查询商户交易结果       tf56pay.cashier.orderQuery
+
+网关前置_网银支付                tf56pay.gateway.bankPay
+网关前置_快捷签约(无页面跳转)    tf56pay.gateway.quickSign
+网关前置_网银支付_退款           tf56pay.gateway.orderRefund
+网关前置_网银支付_订单查询       tf56pay.gateway.orderQuery
+
+快捷支付                    tf56pay.gateway.quickPay
+快捷支付【同名出款】        tf56pay.gateway.authPaytoBank
+快捷签约(无页面跳转)        tf56pay.gateway.quickSign
+快捷签约短信确认            tf56pay.gateway.quickPayConfirm
+扫码支付【支付消费预下单】  tf56pay.cashier.preOrder
+-------------------------------------------------------------------------------
+【外放url】
+测试环境地址
+ https://openapitest.tf56.com/service/api
+ http://openapitest.tf56.com/service/api
+生产环境地址
+ https://openapi.tf56.com/service/api
+ http://openapi.tf56.com/service/api
+ --------------------------------------------------------------------------------
+【启动参数】
+全项目未配置任何可用参数，需要参数可从技术支持人员处获取;）
+

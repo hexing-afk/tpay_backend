@@ -1,0 +1,7 @@
+spring:
+  sdk:
+    appid: 1000293
+    pfx-file: /root/j/config/2013001-rafile3ceshi.pfx
+    pfx-secret: 741963
+    gateway: http://openapitest.tf56.com/service/api
+    mode: test

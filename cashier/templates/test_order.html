@@ -1,0 +1,30 @@
+{{define "test_order.html"}}
+{{template "header.html" .}}
+<div class="content">
+    <div class="content_title">
+        <div class="money">{{.currencySymbol}}{{.reqAmount}}</div>
+        <div class="time">{{Lang .cLang "剩余支付时间"}}：<span id="countDownElement"></span></div>
+    </div>
+    <div class="container">
+        <div class="content_box">
+            <div class="tips">{{Lang .cLang "请付款至以下账户"}}</div>
+            <div class="item">
+                <div>{{Lang .cLang "订单"}}</div>
+                <div>{{.payOrder.MerchantOrderNo}}</div>
+            </div>
+            <!-- <div class="item">
+                <div>{{Lang .cLang "金额"}}</div>
+                <div>{{.currencySymbol}}{{.reqAmount}}</div>
+                <div data-copy='{{.currencySymbol}}{{.reqAmount}}' class="copy-btn">{{Lang .cLang "复制"}}</div>
+            </div> -->
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(function () {
+    // 倒计时
+    countDownNew('countDownElement', '{{.maxTime}}');
+});
+</script>
+{{template "footer.html" .}}
+{{end}}

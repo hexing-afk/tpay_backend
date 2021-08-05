@@ -1,0 +1,61 @@
+{{define "name_order_input.html"}}
+{{template "header.html" .}}
+<div class="content">
+    <div class="hint">
+        {{Lang .cLang "提示：不按照正常支付，无法及时到账，修改金额支付，不到账概不负责"}}
+    </div>
+    <div class="content_title">
+        <div class="money">{{.currencySymbol}}{{.reqAmount}}</div>
+        <div class="time">{{Lang .cLang "剩余支付时间"}}：<span id="countDownElement"></span></div>
+    </div>
+    <div class="container">
+        <div class="content_box">
+            <div class="tips">{{Lang .cLang "请输入付款人姓名"}}</div>
+            <div class="item">
+                <input type="text" id="payer-name-input" placeholder='{{Lang .cLang "付款人姓名"}}'>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <button id="submit-payer-name">{{Lang .cLang "下一步"}}</button>
+</footer>
+
+<script type="text/javascript">
+$(function () {
+    // 倒计时
+    countDownNew('countDownElement', '{{.maxTime}}');
+
+    // 提交付款人姓名
+    $("#submit-payer-name").click(function(){
+        var payerName = $("#payer-name-input").val();
+        console.log(payerName);
+        if (payerName == "") {
+            alert('{{Lang .cLang "请输入付款人姓名"}}');
+            return
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: "{{.name_order_input_path}}",
+            data: {
+                "order_no":'{{.payOrder.OrderNo}}',
+                "payer_name":payerName
+            },
+            success: function(data, textStatus, jqXHR){
+                console.log(data)
+
+                if (data.code == 0) { // 成功
+                    window.location.href="{{.success_jump_url}}";
+                } else {
+                    alert(data.msg);
+                }
+            },
+            dataType: "json"
+        });
+    });
+});
+</script>
+
+{{template "footer.html" .}}
+{{end}}

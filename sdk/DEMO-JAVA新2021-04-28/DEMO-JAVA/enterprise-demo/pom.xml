@@ -1,0 +1,156 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>tf56</groupId>
+  <artifactId>enterprise-demo</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>enterprise-demo</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+	<maven.compiler.target>1.7</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.5</version>
+		</dependency>
+		<!-- log -->
+
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-simple</artifactId>
+          <version>1.7.25</version>
+          <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+          <version>1.7.25</version>
+          <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>commons-codec</groupId>
+          <artifactId>commons-codec</artifactId>
+          <version>1.6</version>
+          <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-lang3</artifactId>
+          <version>3.7</version>
+          <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>javaCertAPI</groupId>
+          <artifactId>javaCertAPI</artifactId>
+          <version>3.0.1</version>
+          <scope>system</scope>
+          <systemPath>
+              ${project.basedir}/lib/javaCertAPI-3.0.1.jar
+          </systemPath>
+      </dependency>
+
+      <dependency>
+          <groupId>top-security</groupId>
+          <artifactId>top-security</artifactId>
+          <version>1.0</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/top-security.jar
+          </systemPath>
+      </dependency>
+      <dependency>
+          <groupId>top-core</groupId>
+          <artifactId>top-core</artifactId>
+          <version>1.0</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/top-core.jar</systemPath>
+      </dependency>
+      <dependency>
+          <groupId>top-commons</groupId>
+          <artifactId>top-commons</artifactId>
+          <version>1.0</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/top-commons.jar
+          </systemPath>
+      </dependency>
+      <dependency>
+          <groupId>top-certapi</groupId>
+          <artifactId>top-certapi</artifactId>
+          <version>1.0</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/top-certapi.jar
+          </systemPath>
+      </dependency>
+
+      <dependency>
+          <groupId>bcmail-jdk15</groupId>
+          <artifactId>bcmail-jdk15</artifactId>
+          <version>1.46</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/bcmail-jdk15-1.46.jar
+          </systemPath>
+      </dependency>
+
+      <dependency>
+          <groupId>bcprov-jdk15</groupId>
+          <artifactId>bcprov-jdk15</artifactId>
+          <version>1.46</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/bcprov-jdk15-1.46.jar
+          </systemPath>
+      </dependency>
+
+      <dependency>
+          <groupId>bctsp-jdk15</groupId>
+          <artifactId>bctsp-jdk15</artifactId>
+          <version>1.46</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/bctsp-jdk15-1.46.jar
+          </systemPath>
+      </dependency>
+
+	</dependencies>
+	<repositories>
+		<repository>
+			<id>people.apache.snapshots</id>
+			<url>http://repository.apache.org/content/groups/snapshots-group/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+</project>

@@ -1,0 +1,254 @@
+syntax = "v1"
+
+info(
+	title: "type title here"
+	desc: "type desc here"
+	author: "type author here"
+	email: "type email here"
+	version: "type version here"
+)
+
+import "payapi_test.api"
+
+// 公共参数
+type RequestCommonField {
+	MerchantNo string `json:"merchant_no"`
+	Timestamp  int64  `json:"timestamp"`
+}
+
+// 代收接口
+type (
+	PayReq {
+		RequestCommonField
+		Subject    string `json:"subject"`      // 商品的标题/交易标题/订单标题/订单关键字等
+		Amount     int64  `json:"amount"`       // 订单金额
+		Currency   string `json:"currency"`     // 币种
+		MchOrderNo string `json:"mch_order_no"` // 外部订单号(商户系统内部的订单号)
+		TradeType  string `json:"trade_type"`   // 交易类型
+		NotifyUrl  string `json:"notify_url"`   // 异步通知地址
+		ReturnUrl  string `json:"return_url"`   // 同步跳转地址
+		Attach     string `json:"attach"`       // 原样返回字段
+	}
+	PayReply {
+		MchOrderNo string `json:"mch_order_no"` // 外部订单号(商户系统内部的订单号)
+		OrderNo    string `json:"order_no"`     // 平台订单号
+		PayUrl     string `json:"pay_url"`      // 付款收银台地址
+	}
+)
+
+// 代收订单查询接口
+type (
+	PayOrderQueryReq {
+		RequestCommonField
+		MchOrderNo string `json:"mch_order_no"` // 外部订单号(商户系统内部的订单号)
+		OrderNo    string `json:"order_no"`     // 平台订单号
+	}
+	PayOrderQueryReply {
+		MchOrderNo    string `json:"mch_order_no"`   // 外部订单号(商户系统内部的订单号)
+		OrderNo       string `json:"order_no"`       // 平台订单号
+		Amount        int64  `json:"amount"`         // 订单请求金额(即将废弃)
+		ReqAmount     int64  `json:"req_amount"`     // 订单请求金额
+		PaymentAmount int64  `json:"payment_amount"` // 实际支付金额
+		Status        int64  `json:"status"`         // 订单状态
+		Currency      string `json:"currency"`       // 币种
+	}
+)
+
+// 代付接口
+type (
+	TransferReq {
+		RequestCommonField
+		Amount             int64  `json:"amount"`                    // 订单金额
+		Currency           string `json:"currency"`                  // 币种
+		MchOrderNo         string `json:"mch_order_no"`              // 外部订单号(商户系统内部的订单号)
+		TradeType          string `json:"trade_type"`                // 交易类型
+		NotifyUrl          string `json:"notify_url"`                // 异步通知地址
+		ReturnUrl          string `json:"return_url,optional"`       // 同步跳转地址
+		Attach             string `json:"attach,optional"`           // 原样返回字段
+		BankName           string `json:"bank_name"`                 // 收款银行名称
+		BankCardHolderName string `json:"bank_card_holder_name"`     // 银行卡持卡人姓名
+		BankCardNo         string `json:"bank_card_no"`              // 银行卡号
+		BankBranchName     string `json:"bank_branch_name,optional"` // 收款银行支行名称
+		BankCode           string `json:"bank_code,optional"`        // 银行代码
+		Remark             string `json:"remark,optional"`           // 付款备注
+	}
+
+	TransferReply {
+		MchOrderNo string `json:"mch_order_no"` // 外部订单号(商户系统内部的订单号)
+		OrderNo    string `json:"order_no"`     // 平台订单号
+		Status     int64  `json:"status"`       // 订单状态
+	}
+)
+
+// 内部系统代付接口
+type (
+	SystemTransferReq {
+		RequestCommonField
+		Amount             int64  `json:"amount"`                    // 订单金额
+		Currency           string `json:"currency"`                  // 币种
+		MchOrderNo         string `json:"mch_order_no"`              // 外部订单号(商户系统内部的订单号)
+		TradeType          string `json:"trade_type"`                // 交易类型
+		BankName           string `json:"bank_name"`                 // 收款银行名称
+		BankCardHolderName string `json:"bank_card_holder_name"`     // 银行卡持卡人姓名
+		BankCardNo         string `json:"bank_card_no"`              // 银行卡号
+		BankCode           string `json:"bankCode,optional"`         // 银行代码
+		BankBranchName     string `json:"bank_branch_name,optional"` // 收款银行支行名称
+		OrderSource        int64  `json:"order_source"`              // 订单来源
+		Remark             string `json:"remark,optional"`           // 付款备注
+	}
+	SystemTransferReply {
+		MchOrderNo string `json:"mch_order_no"` // 外部订单号(商户系统内部的订单号)
+		OrderNo    string `json:"order_no"`     // 平台订单号
+		Status     int64  `json:"status"`       // 订单状态
+	}
+)
+
+// 系统内部批量付款接口
+type (
+	SystemTransferBatchReq {
+		RequestCommonField
+		BatchNo string `json:"batch_no"`
+	}
+	SystemTransferBatchReply {
+	}
+)
+
+// 代付订单查询接口
+type (
+	TransferOrderQueryReq {
+		RequestCommonField
+		OrderNo    string `json:"order_no,optional"`     // 平台订单号
+		MchOrderNo string `json:"mch_order_no,optional"` // 外部订单号(商户系统内部的订单号)
+	}
+
+	TransferOrderQueryReply {
+		MchOrderNo string `json:"mch_order_no"` // 外部订单号(商户系统内部的订单号)
+		OrderNo    string `json:"order_no"`     // 平台订单号
+		Amount     int64  `json:"amount"`       // 订单请求金额(即将废弃)
+		ReqAmount  int64  `json:"req_amount"`   // 订单请求金额
+		Status     int64  `json:"status"`       // 订单状态
+		Currency   string `json:"currency"`     // 币种
+	}
+)
+
+// 余额查询接口
+type (
+	QueryBalanceReq {
+		RequestCommonField
+	}
+	QueryBalanceReply {
+		Balance  int64  `json:"balance"`
+		Currency string `json:"currency"`
+	}
+)
+
+type (
+	GetUnionpayReq {
+	}
+	GetUnionpayReply {
+		Url string `json:"url"`
+	}
+)
+
+type (
+	GetStaticReq {
+		Path     string `path:"path"`
+		Filename string `path:"filename"`
+	}
+	GetStaticReply {
+		ContentType string `json:"content_type"`
+		Content     []byte `json:"content"`
+	}
+)
+
+@server(
+	middleware: LogRequest
+)
+service payapi-api {
+	// 代收接口
+	@handler Pay
+	post /pay (PayReq) returns (PayReply)
+	
+	// 代收订单查询接口
+	@handler PayOrderQuery
+	post /pay-order-query (PayOrderQueryReq) returns (PayOrderQueryReply)
+	
+	// 代付接口
+	@handler Transfer
+	post /transfer (TransferReq) returns (TransferReply)
+	
+	// 内部系统代付接口
+	@handler SystemTransfer
+	post /system/transfer (SystemTransferReq) returns (SystemTransferReply)
+	
+	// 内部系统批量代付接口
+	@handler SystemTransferBatch
+	post /system/transfer-batch (SystemTransferBatchReq) returns (SystemTransferBatchReply)
+	
+	// 代付订单查询接口
+	@handler TransferOrderQuery
+	post /transfer-order-query (TransferOrderQueryReq) returns (TransferOrderQueryReply)
+	
+	// 余额查询接口
+	@handler QueryBalance
+	post /query-balance (QueryBalanceReq) returns (QueryBalanceReply)
+	
+	// 页面
+	@handler GetUnionpay
+	get /get-unionpay (GetUnionpayReq) returns (GetUnionpayReply)
+	
+	@handler GetStatic
+	get /get-static/:path/:filename (GetStaticReq) returns (GetStaticReply)
+}
+
+@server(
+	group: upstream_notify
+	middleware: LogRequest
+)
+service payapi-api {
+	//==================================代收异步回调=======================================
+	// totopay
+	@handler TotopayPay
+	post /notify/totopay/pay () returns ()
+	
+	// goldpays
+	@handler GoldPaysPay
+	post /notify/goldpays/pay () returns ()
+	
+	// 777pay
+	@handler ThreeSevenPayPay
+	post /notify/zf777pay/pay () returns ()
+	
+	// xpay
+	@handler XPayPay
+	post /notify/xpay/pay () returns ()
+	
+	// toppay
+	@handler toppayPay
+	post /notify/toppay/pay () returns ()
+	
+	// toppay
+	@handler toppayTransfer
+	post /notify/toppay/transfer () returns ()
+	
+	// toppay
+	@handler toppaySign
+	post /notify/toppay/sign () returns ()
+	
+	//===================================代付异步回调======================================
+	// totopay
+	@handler TotopayTransfer
+	post /notify/totopay/transfer () returns ()
+	
+	// goldpays
+	@handler GoldPaysTransfer
+	post /notify/goldpays/transfer () returns ()
+	
+	// 777pay
+	@handler ThreeSevenPayTransfer
+	post /notify/zf777pay/transfer () returns ()
+	
+	// xpay
+	@handler XPayTransfer
+	post /notify/xpay/transfer () returns ()
+}

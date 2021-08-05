@@ -1,0 +1,27 @@
+Name: adminapi-api
+Host: 0.0.0.0
+Port: 6400
+Timezone: "Asia/Phnom_Penh"
+# Mode: console|file|volume
+# Level: options=info|error|severe
+Log:
+  Mode: console
+  Level: info
+Mysql:
+#  DataSource: root:123@tcp(127.0.0.1:3306)/tpay?charset=utf8mb4
+  DataSource: root:123@tcp(10.41.1.242:3306)/tpay?charset=utf8mb4
+Redis:
+  Host: 127.0.0.1:6379
+  Pass: 123456a
+  DB: 0  # 注意:入口文件会重置此参数
+CloudStorage: oss
+OssStorage:
+  AccessKeyId: LTAI5t8Uj186JkiPgLgtzyoJ
+  SecretAccessKey: IiIrhOFcLylVQhohti6YXweZVloHET
+  Endpoint: oss-ap-southeast-1.aliyuncs.com
+  Bucket: xpay-dev
+S3Storage:
+  AccessKeyId: xxxxxx
+  SecretAccessKey: xxxxx
+  Region: ap-southeast-1
+  Bucket: xxxxxx

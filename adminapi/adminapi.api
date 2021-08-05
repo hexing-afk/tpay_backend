@@ -1,0 +1,47 @@
+syntax = "v1"
+
+info(
+	title: "type title here"
+	desc: "type desc here"
+	author: "type author here"
+	email: "type email here"
+	version: "type version here"
+)
+
+import "adminapi_admin.api"
+import "adminapi_merchant.api"
+import "adminapi_order.api"
+import "adminapi_public.api"
+import "adminapi_export.api"
+
+@server(
+	group: login
+)
+service adminapi-api {
+	@handler LoginHandler
+	post /login (LoginReq) returns (LoginReply);
+	
+	@handler GetCaptchaHandler
+	get /get-captcha () returns (CaptchaReply);
+}
+
+// 用户登录
+type (
+	LoginReq {
+		Username    string `json:"username"`
+		Password    string `json:"password"`
+		CaptchaId   string `json:"captcha_id,optional"`
+		CaptchaCode string `json:"captcha_code,optional"`
+		TotpCode    string `json:"totp_code"`
+	}
+	LoginReply {
+		Username   string `json:"username"`
+		LoginToken string `json:"login_token"`
+	}
+)
+
+// 获取验证码
+type CaptchaReply {
+	CaptchaId string `json:"captcha_id"`
+	Base64png string `json:"base64png"`
+}

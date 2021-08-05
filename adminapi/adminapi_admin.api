@@ -1,0 +1,691 @@
+syntax = "v1"
+
+info(
+    title: "type title here"
+    desc: "type desc here"
+    author: "type author here"
+    email: "type email here"
+    version: "type version here"
+)
+
+
+//=============================================Admin包接口===============================================
+// 管理员账号
+@server(
+    group: admin
+    middleware: CheckLogin
+)
+service adminapi-api {
+    // 管理员列表
+    @handler GetAdminList
+    get /admin/list (GetAdminListRequest) returns (GetAdminListResponse)
+
+    // 添加管理员
+    @handler AddAdmin
+    post /admin/add (AddAdminRequest) returns (AddAdminResponse)
+
+    // 启用|禁用管理员
+    @handler EnableAdmin
+    post /admin/enable (EnableAdminRequest) returns ()
+
+    // 重置管理员登录密码
+    @handler ResetAdminPwd
+    post /admin/reset (ResetAdminPwdRequest) returns ()
+
+    // 重置商户的totp秘钥
+    @handler ResetAdminTotpSecret
+    post /admin/reset-totp-secret (ResetAdminTotpSecretRequest) returns (ResetAdminTotpSecretResponse)
+
+    // 修改管理员密码
+    @handler ModifyAdminPassword
+    post /admin/modify-pwd (ModifyAdminPasswordRequest) returns ()
+
+    // 平台收款卡列表
+    @handler GetPlatformBankCardList
+    get /platform/bank-card/list (GetPlatformBankCardListRequest) returns (GetPlatformBankCardListResponse)
+
+    // 平台收款卡详情
+    @handler GetPlatformBankCard
+    get /platform/bank-card (GetPlatformBankCardRequest) returns (GetPlatformBankCardResponse)
+
+    // 添加平台收款卡
+    @handler AddPlatformBankCard
+    post /platform/bank-card/add (AddPlatformBankCardRequest) returns ()
+
+    // 修改平台收款卡
+    @handler ModifyPlatformBankCard
+    post /platform/bank-card/modify (ModifyPlatformBankCardRequest) returns ()
+
+    // 启用|禁用平台收款卡
+    @handler EnablePlatformBankCard
+    post /platform/bank-card/enable (EnablePlatformBankCardRequest) returns ()
+
+    // 删除平台收款卡
+    @handler DeletePlatformBankCard
+    post /platform/bank-card/delete (DeletePlatformBankCardRequest) returns ()
+
+    // 查询地区列表
+    @handler AreaList
+    get /area/list () returns (AreaListReply)
+
+    // 添加上游
+    @handler AddUpstream
+    post /upstream/add (AddUpstreamRequest) returns ()
+
+    // 修改上游
+    @handler ModifyUpstream
+    post /upstream/modify (ModifyUpstreamRequest) returns ()
+
+    // 上游列表
+    @handler GetUpstreamList
+    get /upstream/list (GetUpstreamListRequest) returns (GetUpstreamListResponse)
+
+    // 上游详情
+    @handler GetUpstream
+    get /upstream (GetUpstreamRequest) returns (GetUpstreamResponse)
+
+    // 查询上游余额
+    @handler GetUpstreamBalance
+    get /upstream/balance (GetUpstreamBalanceRequest) returns (GetUpstreamBalanceResponse)
+
+    // 添加上游通道
+    @handler AddUpstreamChannel
+    post /upstream/channel/add (AddUpstreamChannelRequest) returns ()
+
+    // 修改上游通道
+    @handler ModifyUpstreamChannel
+    post /upstream/channel/modify (ModifyUpstreamChannelRequest) returns ()
+
+    // 上游通道列表
+    @handler GetUpstreamChannelList
+    get /upstream/channel/list (GetUpstreamChannelListRequest) returns (GetUpstreamChannelListResponse)
+
+    // 上游通道详情
+    @handler GetUpstreamChannel
+    get /upstream/channel (GetUpstreamChannelRequest) returns (GetUpstreamChannelResponse)
+
+    // 上游通道配置详情
+    @handler GetUpstreamChannelConfig
+    get /upstream/channel/config (GetUpstreamChannelConfigRequest) returns (GetUpstreamChannelConfigResponse)
+
+    // 保存上游通道配置
+    @handler SaveUpstreamChannelConfig
+    post /upstream/channel/config/save (SaveUpstreamChannelConfigRequest) returns ()
+
+    // 启用|禁用通道
+    @handler EnableUpstreamChannel
+    post /upstream/channel/enable (EnableUpstreamChannelRequest) returns ()
+
+    // 删除上游通道
+    @handler DeleteUpstreamChannel
+    post /upstream/channel/delete (DeleteUpstreamChannelRequest) returns ()
+
+    // 平台通道列表
+    @handler GetPlatformChannelList
+    get /platform/channel/list (GetPlatformChannelListRequest) returns (GetPlatformChannelListResponse)
+
+    // 添加平台通道
+    @handler AddPlatformChannel
+    post /platform/channel/add (AddPlatformChannelRequest) returns ()
+
+    // 修改平台通道
+    @handler ModifyPlatformChannel
+    post /platform/channel/modify (ModifyPlatformChannelRequest) returns ()
+
+    // 启用|禁用平台通道
+    @handler EnablePlatformChannel
+    post /platform/channel/enable (EnablePlatformChannelRequest) returns ()
+
+    // 删除平台通道
+    @handler DeletePlatformChannel
+    post /platform/channel/delete (DeletePlatformChannelRequest) returns ()
+
+    // 平台通道关联列表
+    @handler GetPlatformUpstreamList
+    get /platform-channel/upstream/list (GetPlatformUpstreamListRequest) returns (GetPlatformUpstreamListResponse)
+
+    // 关联上游通道
+    @handler SavePlatformUpstream
+    post /platform-channel/upstream/save (SavePlatformUpstreamRequest) returns ()
+
+    // 平台收益明细列表
+    @handler PlatformWalletLogList
+    get /platform-wallet-log/list (PlatformWalletLogListRequest) returns (PlatformWalletLogListReply)
+
+    // 修改通道配置
+    @handler PlanformChannelSetting
+    post /platform-channel/setting (PlanformChannelSettingRequest) returns (PlanformChannelSettingReply)
+
+    // 修改通道配置
+    @handler GetPlanformChannelSetting
+    get /platform-channel/setting (GetPlanformChannelSettingRequest) returns (GetPlanformChannelSettingReply)
+}
+
+// 管理员账号列表
+type (
+    GetAdminListRequest {
+        Page int64 `form:"page"`
+        PageSize int64 `form:"page_size"`
+    }
+    GetAdminListResponse {
+        Total int64 `json:"total"`
+        List []Admin `json:"list"`
+    }
+
+    Admin {
+        AdminId int64 `json:"admin_id"`
+        Username string `json:"username"`
+        Phone string `json:"phone"`
+        Email string `json:"email"`
+        EnableStatus int64 `json:"enable_status"`
+        CreateTime int64 `json:"create_time"`
+        TotpSecret string `json:"totp_secret"`
+    }
+)
+
+// 添加管理员
+type (
+    AddAdminRequest {
+        Username string `json:"username"`
+        Password string `json:"password"`
+        Phone string `json:"phone,optional"`
+        Email string `json:"email,optional"`
+    }
+
+    AddAdminResponse {
+        AdminId int64 `json:"admin_id"`
+    }
+)
+
+// 启用|禁用管理员
+type (
+    EnableAdminRequest {
+        AdminId int64 `json:"admin_id"`
+        Enable int64 `json:"enable,default=1,options=1|2"`
+    }
+)
+
+// 重置管理员密码
+type (
+    ResetAdminPwdRequest {
+        LoginUserPwd string `json:"login_user_pwd"`
+        AdminId int64 `json:"admin_id"`
+    }
+)
+
+// 重置管理员的totp秘钥
+type (
+    ResetAdminTotpSecretRequest {
+        AdminId int64 `json:"admin_id"`
+    }
+    ResetAdminTotpSecretResponse {
+        TotpSecret string `json:"totp_secret"`
+    }
+)
+
+// 修改管理员密码
+type (
+    ModifyAdminPasswordRequest {
+        OldPassword string `json:"old_password"`
+        NewPassword string `json:"new_password"`
+    }
+)
+
+// 平台收款卡列表
+type (
+    GetPlatformBankCardListRequest {
+        Search string `form:"search,optional"`
+        Currency string `form:"currency,optional"`
+        Page int64 `form:"page"`
+        PageSize int64 `form:"page_size"`
+    }
+    GetPlatformBankCardListResponse {
+        Total int64 `json:"total"`
+        List []PlatformBankCardList `json:"list"`
+    }
+
+    PlatformBankCardList {
+        CardId int64 `json:"card_id"`
+        BankName string `json:"bank_name"`
+        AccountName string `json:"account_name"`
+        CreateTime int64 `json:"create_time"`
+        CardNumber string `json:"card_number"`
+        BranchName string `json:"branch_name"`
+        Currency string `json:"currency"`
+        Status int64 `json:"status"`
+        MaxAmount int64 `json:"max_amount"`
+        Remark string `json:"remark"`
+        ReceivedToday int64 `json:"received_today"`
+    }
+)
+
+// 平台收款卡详情
+type (
+    GetPlatformBankCardRequest {
+        CardId int64 `form:"card_id"`
+    }
+    GetPlatformBankCardResponse {
+        Card PlatformBankCard `json:"card"`
+    }
+
+    PlatformBankCard {
+        CardId int64 `json:"card_id"`
+        BankName string `json:"bank_name"`
+        AccountName string `json:"account_name"`
+        CardNumber string `json:"card_number"`
+        BranchName string `json:"branch_name"`
+        Currency string `json:"currency"`
+        MaxAmount int64 `json:"max_amount"`
+        Remark string `json:"remark"`
+        QrCode string `json:"qr_code"`
+    }
+)
+
+// 添加平台收款卡
+type (
+    AddPlatformBankCardRequest {
+        BankName string `json:"bank_name"`
+        AccountName string `json:"account_name"`
+        CardNumber string `json:"card_number"`
+        BranchName string `json:"branch_name,optional"`
+        Currency string `json:"currency"`
+        MaxAmount int64 `json:"max_amount"`
+        QrCode string `json:"qr_code,optional"`
+        Remark string `json:"remark,optional"`
+    }
+)
+
+// 修改平台收款卡
+type (
+    ModifyPlatformBankCardRequest {
+        CardId int64 `json:"card_id"`
+        BankName string `json:"bank_name,optional"`
+        AccountName string `json:"account_name,optional"`
+        CardNumber string `json:"card_number,optional"`
+        BranchName string `json:"branch_name"`
+        Currency string `json:"currency,optional"`
+        MaxAmount int64 `json:"max_amount,optional"`
+        QrCode string `json:"qr_code"`
+        Remark string `json:"remark"`
+    }
+)
+
+// 启用|禁用平台收款卡
+type (
+    EnablePlatformBankCardRequest {
+        CardId int64 `json:"card_id"`
+        Enable int64 `json:"enable,options=1|2"`
+    }
+)
+
+// 删除平台收款卡
+type (
+    DeletePlatformBankCardRequest {
+        CardId int64 `json:"card_id"`
+    }
+)
+
+// 地区列表
+type (
+    AreaListReply {
+        List []AreaData `json:"list"`
+    }
+    AreaData {
+        Id int64 `json:"id"`
+        AreaName string `json:"area_name"`
+    }
+)
+
+// 添加上游
+type (
+    AddUpstreamRequest {
+        UpstreamName string `json:"upstream_name"`
+        CallConfig string `json:"call_config,optional"`
+        UpstreamMerchantNo string `json:"upstream_merchant_no"`
+        UpstreamCode string `json:"upstream_code"`
+        AreaId int64 `json:"area_id"`
+    }
+)
+
+// 修改上游
+type (
+    ModifyUpstreamRequest {
+        UpstreamId int64 `json:"upstream_id"`
+        UpstreamName string `json:"upstream_name,optional"`
+        CallConfig string `json:"call_config,optional"`
+        UpstreamMerchantNo string `json:"upstream_merchant_no"`
+        UpstreamCode string `json:"upstream_code"`
+        AreaId int64 `json:"area_id"`
+    }
+)
+
+// 获取上游列表
+type (
+    GetUpstreamListRequest {
+        UpstreamName string `form:"upstream_name,optional"`
+        Page int64 `form:"page"`
+        PageSize int64 `form:"page_size"`
+    }
+    GetUpstreamListResponse {
+        Total int64 `json:"total"`
+        List []UpstreamList `json:"list"`
+    }
+    UpstreamList {
+        UpstreamId int64 `json:"upstream_id"`
+        UpstreamName string `json:"upstream_name"`
+        CreateTime int64 `json:"create_time"`
+        UpstreamMerchantNo string `json:"upstream_merchant_no"`
+        UpstreamCode string `json:"upstream_code"`
+        AreaName string `json:"area_name"`
+    }
+)
+
+// 上游详情
+type (
+    GetUpstreamRequest {
+        UpstreamId int64 `form:"upstream_id"`
+    }
+    GetUpstreamResponse {
+        Upstream Upstream `json:"upstream"`
+    }
+
+    Upstream {
+        UpstreamId int64 `json:"upstream_id"`
+        UpstreamName string `json:"upstream_name"`
+        CallConfig string `json:"call_config"`
+        CreateTime int64 `json:"create_time"`
+        UpstreamMerchantNo string `json:"upstream_merchant_no"`
+        UpstreamCode string `json:"upstream_code"`
+        AreaId int64 `json:"area_id"`
+    }
+)
+
+// 查询上游余额
+type (
+    GetUpstreamBalanceRequest {
+        UpstreamId int64 `form:"upstream_id"`
+    }
+    GetUpstreamBalanceResponse {
+        List []UpstreamBalance `json:"list"`
+    }
+
+    UpstreamBalance {
+        Balance float64 `json:"balance"`
+        PayoutBalance float64 `json:"payout_balance"`
+        PayAmountLimit float64 `json:"pay_amount_limit"`
+        PayoutAmountLimit float64 `json:"payout_amount_limit"`
+        IsDivideHundred bool `json:"is_divide_hundred"`
+        Currency string `json:"currency"`
+    }
+)
+
+// 添加上游通道
+type (
+    AddUpstreamChannelRequest {
+        ChannelName string `json:"channel_name"`
+        ChannelCode string `json:"channel_code,optional"`
+        ChannelDesc string `json:"channel_desc,optional"`
+        Currency string `json:"currency"`
+        UpstreamId int64 `json:"upstream_id"`
+        ChannelType int64 `json:"channel_type,default=1,options=1|2"`
+    }
+)
+
+// 修改上游通道
+type (
+    ModifyUpstreamChannelRequest {
+        ChannelId int64 `json:"channel_id"`
+        ChannelName string `json:"channel_name,optional"`
+        ChannelCode string `json:"channel_code,optional"`
+        ChannelDesc string `json:"channel_desc,optional"`
+        Currency string `json:"currency,optional"`
+        UpstreamId int64 `json:"upstream_id,optional"`
+        ChannelType int64 `json:"channel_type,default=1,options=1|2"`
+    }
+)
+
+// 上游通道列表
+type (
+    GetUpstreamChannelListRequest {
+        Search string `form:"search,optional"`
+        ChannelType int64 `form:"channel_type,optional"`
+        StartCreateTime int64 `form:"start_create_time,optional"`
+        EndCreateTime int64 `form:"end_create_time,optional"`
+        Page int64 `form:"page"`
+        PageSize int64 `form:"page_size"`
+    }
+
+    GetUpstreamChannelListResponse {
+        Total int64 `json:"total"`
+        List []UpstreamChannelList `json:"list"`
+    }
+
+    UpstreamChannelList {
+        ChannelId int64 `json:"channel_id"`
+        ChannelName string `json:"channel_name"`
+        ChannelCode string `json:"channel_code"`
+        ChannelDesc string `json:"channel_desc"`
+        Currency string `json:"currency"`
+        ChannelType int64 `json:"channel_type"`
+        UpstreamName string `json:"upstream_name"`
+        Rate float64 `json:"rate"`
+        DeductionMethod int64 `json:"deduction_method"`
+        Status int64 `json:"status"`
+        UpdateTime int64 `json:"update_time"`
+        SingleFee int64 `json:"single_fee"`
+    }
+)
+
+// 获取上游通道详情
+type (
+    GetUpstreamChannelRequest {
+        ChannelId int64 `form:"channel_id"`
+    }
+
+    GetUpstreamChannelResponse {
+        Channel UpstreamChannel `json:"channel"`
+    }
+
+    UpstreamChannel {
+        ChannelId int64 `json:"channel_id"`
+        ChannelName string `json:"channel_name"`
+        ChannelCode string `json:"channel_code"`
+        ChannelDesc string `json:"channel_desc"`
+        Currency string `json:"currency"`
+        UpstreamId int64 `json:"upstream_id"`
+        UpstreamName string `json:"upstream_name"`
+        ChannelType int64 `json:"channel_type"`
+    }
+)
+
+// 获取上游通道配置详情
+type (
+    GetUpstreamChannelConfigRequest {
+        ChannelId int64 `form:"channel_id"`
+    }
+
+    GetUpstreamChannelConfigResponse {
+        ChannelConfig UpstreamChannelConfig `json:"channel_config"`
+    }
+
+    UpstreamChannelConfig {
+        ChannelId int64 `json:"channel_id"`
+        DeductionMethod int64 `json:"deduction_method"`
+        Rate float64 `json:"rate"`
+        SingleFee int64 `json:"single_fee"`
+        SingleMaxAmount int64 `json:"single_max_amount"`
+    }
+)
+
+// 保存上游渠道配置
+type (
+    SaveUpstreamChannelConfigRequest {
+        ChannelId int64 `json:"channel_id"`
+        DeductionMethod int64 `json:"deduction_method,default=1,options=1|2"` // 扣费方式: 1-内扣， 2-外扣
+        Rate float64 `json:"rate,default=0,range=[0:100]"`
+        SingleFee int64 `json:"single_fee,default=0"`
+        SingleMaxAmount int64 `json:"single_max_amount,default=0"`
+    }
+)
+
+// 启用|禁用上游渠道
+type (
+    EnableUpstreamChannelRequest {
+        ChannelId int64 `json:"channel_id"`
+        Enable int64 `json:"enable,default=1,options=1|2"`
+    }
+)
+
+// 删除上游通道
+type (
+    DeleteUpstreamChannelRequest {
+        ChannelId int64 `json:"channel_id"`
+    }
+)
+
+// 平台通道列表
+type (
+    GetPlatformChannelListRequest {
+        Search string `form:"search,optional"`
+        Page int64 `form:"page"`
+        PageSize int64 `form:"page_size"`
+    }
+
+    GetPlatformChannelListResponse {
+        Total int64 `json:"total"`
+        List []PlatformChannelList `json:"list"`
+    }
+
+    PlatformChannelList {
+        ChannelId int64 `json:"channel_id"`
+        ChannelName string `json:"channel_name"`
+        ChannelCode string `json:"channel_code"`
+        ChannelDesc string `json:"channel_desc"`
+        ChannelType int64 `json:"channel_type"`
+        Status int64 `json:"status"`
+        CreateTime int64 `json:"create_time"`
+        UpdateTime int64 `json:"update_time"`
+        UpstreamChannelName string `json:"upstream_channel_name"`
+        AreaId int64 `json:"area_id"`
+        AreaName string `json:"area_name"`
+    }
+)
+
+// 添加平台通道
+type (
+    AddPlatformChannelRequest {
+        ChannelName string `json:"channel_name"`
+        ChannelCode string `json:"channel_code"`
+        ChannelDesc string `json:"channel_desc,optional"`
+        ChannelType int64 `json:"channel_type,default=1,options=1|2"`
+        AreaId int64 `json:"area_id"`
+    }
+)
+
+// 修改平台通道
+type (
+    ModifyPlatformChannelRequest {
+        ChannelId int64 `json:"channel_id"`
+        ChannelName string `json:"channel_name,optional"`
+        ChannelCode string `json:"channel_code,optional"`
+        ChannelDesc string `json:"channel_desc,optional"`
+        ChannelType int64 `json:"channel_type,default=1,options=1|2"`
+        AreaId int64 `json:"area_id"`
+    }
+)
+
+// 启用|禁用平台通道
+type (
+    EnablePlatformChannelRequest {
+        ChannelId int64 `json:"channel_id"`
+        Enable int64 `json:"enable,default=1,options=1|2"`
+    }
+)
+
+// 删除平台通道
+type (
+    DeletePlatformChannelRequest {
+        ChannelId int64 `json:"channel_id"`
+    }
+)
+
+// 平台通道上游列表
+type (
+    GetPlatformUpstreamListRequest {
+        ChannelId int64 `form:"channel_id"`
+    }
+
+    GetPlatformUpstreamListResponse {
+        ChannelId int64 `json:"channel_id"`
+        LinkedChannel []PlatformUpstreamChannel `json:"linked_channel"`
+        NotLinkedChannel []PlatformUpstreamChannel `json:"not_linked_channel"`
+    }
+
+    PlatformUpstreamChannel {
+        UpstreamChannelId int64 `json:"upstream_channel_id"`
+        UpstreamChannelName string `json:"upstream_channel_name"`
+    }
+)
+
+// 保存平台通道的上游通道
+type (
+    SavePlatformUpstreamRequest {
+        ChannelId int64 `json:"channel_id"`
+        UpstreamChannelIds []int64 `json:"upstream_channel_ids,optional"`
+    }
+)
+
+// 平台收益列表
+type (
+    PlatformWalletLogListRequest {
+        BusinessNo string `form:"business_no,optional"`
+        Source int64 `form:"source,optional"`
+        Currency string `form:"currency,optional"`
+        Page int64 `form:"page"`
+        PageSize int64 `form:"page_size"`
+    }
+
+    PlatformWalletLogListReply {
+        Total int64 `json:"total"`
+        List []PlatformWalletLogListData `json:"list"`
+    }
+
+    PlatformWalletLogListData {
+        Id int64 `json:"id"`                    //平台钱包日志id
+        BusinessNo string `json:"business_no"`  //业务号
+        Source int64 `json:"source"`            //收益来源:3-商户提现；4-商户代付；5-商户代收；
+        MerchantFee int64 `json:"merchant_fee"` //商户手续费
+        UpstreamFee int64 `json:"upstream_fee"` //上游手续费
+        Income int64 `json:"income"`            //收益
+        CreateTime int64 `json:"create_time"`   //创建时间
+        Currency string `json:"currency"`       //币种
+    }
+)
+
+//
+type (
+    PlanformChannelSettingRequest {
+        ChannelId int64 `json:"channel_id"`
+        StartTime int64 `json:"start_time"`
+        EndTime int64 `json:"end_time"`
+        StartAmount int64 `json:"start_amount"`
+        EndAmount int64 `json:"end_amount"`
+    }
+
+    PlanformChannelSettingReply {
+    }
+)
+
+//
+type (
+    GetPlanformChannelSettingRequest {
+        ChannelId int64 `form:"channel_id"`
+    }
+
+    GetPlanformChannelSettingReply {
+        StartTime int64 `json:"start_time"`
+        EndTime int64 `json:"end_time"`
+        StartAmount int64 `json:"start_amount"`
+        EndAmount int64 `json:"end_amount"`
+    }
+)

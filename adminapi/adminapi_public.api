@@ -1,0 +1,109 @@
+syntax = "v1"
+
+info(
+    title: "type title here"
+    desc: "type desc here"
+    author: "type author here"
+    email: "type email here"
+    version: "type version here"
+)
+
+
+//========================================Public包接口=========================================
+@server(
+    group: public
+    middleware: CheckLogin
+)
+service adminapi-api {
+    // 退出登录
+    @handler Logout
+    post /logout () returns (LogoutResponse)
+
+    // 上传图片
+    @handler UploadImage
+    post /upload/image (UploadImageRequest) returns (UploadImageResponse)
+
+    // 币种列表
+    @handler GetCurrencyList
+    get /currency/list () returns (GetCurrencyListResponse)
+
+    // 保存网站配置
+    @handler SaveSiteConfig
+    post /site-config/save (SaveSiteConfigRequest) returns ()
+
+    // 网站配置
+    @handler GetSiteConfig
+    get /site-config () returns (GetSiteConfigResponse)
+
+    // 其他配置
+    @handler GetOtherConfig
+    get /other-config () returns (GetOtherConfigResponse)
+
+    // 保存其他配置
+    @handler SaveOtherConfig
+    post /other-config/save (SaveOtherConfigRequest) returns ()
+}
+
+// 退出登录
+type (
+    LogoutResponse {
+    }
+)
+
+//上传图片
+type (
+    UploadImageRequest {
+        ImageStr string `json:"image_str"`
+    }
+    UploadImageResponse {
+        ImageUrl string `json:"image_url"`
+    }
+)
+
+// 币种列表
+type (
+    GetCurrencyListResponse {
+        List []Currency `json:"list"`
+    }
+
+    Currency {
+        Currency        string `json:"currency"`
+        Symbol          string `json:"symbol"`
+        Country         string `json:"country"`
+        IsDivideHundred int64  `json:"is_divide_hundred"`
+    }
+)
+
+// 保存网站配置
+type (
+    SaveSiteConfigRequest {
+        SiteName string `json:"site_name"`
+        SiteLogo string `json:"site_logo"`
+        SiteLang string `json:"site_lang"`
+    }
+)
+
+// 网站配置
+type (
+    GetSiteConfigResponse {
+        SiteName string `json:"site_name"`
+        SiteLogo string `json:"site_logo"`
+        SiteLang string `json:"site_lang"`
+    }
+)
+
+// 其他配置
+type (
+    GetOtherConfigResponse {
+        PayTradeTypeSlice string `json:"pay_trade_type_slice"` //代收交易方式
+        TransferTradeTypeSlice string `json:"transfer_trade_type_slice"` //代付交易类型
+    }
+)
+
+// 保存其他配置
+type (
+    SaveOtherConfigRequest {
+        PayTradeTypeSlice string `json:"pay_trade_type_slice"` //代收交易方式
+        TransferTradeTypeSlice string `json:"transfer_trade_type_slice"` //代付交易类型
+    }
+)

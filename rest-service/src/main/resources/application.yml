@@ -1,0 +1,30 @@
+spring:
+  sdk:
+    mode: normal
+    cb-gateway: http://127.0.0.1:8000/notify/toppay/pay
+    gateway: https://openapi.tf56.com/service/api
+    keys:
+      - appid: 3657798
+        pfx-file: /opt/tpay/backend/zibozhengshu.pfx
+        pfx-secret: baibai88
+        merchant-userid: 6688531137034095
+        toaccountnumber: 8800013385833
+      - appid: 3657799
+        pfx-file: /opt/tpay/backend/zhengshuhainan.pfx
+        pfx-secret: baibai88
+        merchant-userid: 6688531146016889
+        toaccountnumber: 8800013385835
+      - appid: 3657839
+        pfx-file: /opt/tpay/backend/loudi.pfx
+        pfx-secret: xx123456
+        merchant-userid: 6688531143131611
+        toaccountnumber: 8800013466029
+      - appid: 3657848
+        pfx-file: /opt/tpay/backend/xingfeng.pfx
+        pfx-secret: xx123456
+        merchant-userid: 6688531144036660
+        toaccountnumber: 8800013472319
+
+server:
+  #端口号
+  port: 8080

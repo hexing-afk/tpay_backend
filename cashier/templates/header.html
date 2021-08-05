@@ -1,0 +1,28 @@
+{{define "header.html"}}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>{{.title}}</title>
+    <link rel="stylesheet" href="/assets/static/css/base.css">
+    <link rel="stylesheet" href="/assets/static/css/index.css?ver=1.1">
+    <script src="/assets/static/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/static/js/flexible.js"></script>
+    <script src="/assets/static/js/common.js"></script>
+</head>
+<body>
+<!-- 头部 -->
+<header>
+    <div class="iconfont">
+        <img src="/assets/static/img/返回@2x.png" alt="">
+    </div>
+    <div class="title">
+        <span>{{Lang .cLang "收银台"}}</span>
+    </div>
+    <div class="selectlang">
+        {{template "select_lang.html" .}}
+    </div>
+</header>
+{{end}}

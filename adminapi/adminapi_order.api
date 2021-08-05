@@ -1,0 +1,393 @@
+syntax = "v1"
+
+info(
+    title: "type title here"
+    desc: "type desc here"
+    author: "type author here"
+    email: "type email here"
+    version: "type version here"
+)
+
+
+//=============================order包接口===============================
+@server(
+    group: order
+    middleware: CheckLogin
+)
+service adminapi-api {
+    // 代收订单列表
+    @handler GetPayOrderList
+    get /order/pay/list (GetPayOrderListRequest) returns (GetPayOrderListResponse)
+
+    @handler GetPayOrderDetail
+    get /order/pay/detail (GetPayOrderDetailRequest) returns (GetPayOrderDetailResponse)
+
+    // 代付订单列表
+    @handler GetTransferOrderList
+    get /order/transfer/list (GetTransferOrderListRequest) returns (GetTransferOrderListResponse)
+
+    // 代付订单详情
+    @handler GetTransferOrderDetail
+    get /order/transfer/detail (GetTransferOrderDetailRequest) returns (GetTransferOrderDetailResponse)
+
+    // 商户充值订单列表
+    @handler GetMerchantRechargeOrderList
+    get /order/merchant-recharge/list (GetMerchantRechargeOrderListRequest) returns (GetMerchantRechargeOrderListResponse)
+
+    // 商户充值订单审核
+    @handler MerchantRechargeOrderAudit
+    post /order/merchant-recharge/audit (MerchantRechargeOrderAuditRequest) returns ()
+
+    // 商户提现订单列表
+    @handler GetMerchantWithdrawOrderList
+    get /order/merchant-withdraw/list (GetMerchantWithdrawOrderListRequest) returns (GetMerchantWithdrawOrderListResponse)
+
+    // 商户提现订单审核
+    @handler MerchantWithdrawOrderAudit
+    post /order/merchant-withdraw/audit (MerchantWithdrawOrderAuditRequest) returns ()
+
+    // 商户提现成功
+    @handler MerchantWithdrawSuccess
+    post /order/merchant-withdraw/success (MerchantWithdrawSuccessRequest) returns ()
+
+    // 上游代付通道名称
+    @handler UpTransferChannelList
+    get /up-channel/transfer/list (UpTransferChannelListRequest) returns (UpTransferChannelListResponse)
+
+    // 商户提现派单
+    @handler WithdrawOrderAllot
+    post /order/merchant-withdraw/allot (WithdrawOrderAllotRequest) returns (WithdrawOrderAllotResponse)
+
+    // 代收订单通知
+    @handler PayOrderNotify
+    post /order/pay/notify (PayOrderNotifyRequest) returns (PayOrderNotifyResponse)
+
+    // 代付订单通知
+    @handler TransferOrderNotify
+    post /order/transfer/notify (TransferOrderNotifyRequest) returns (TransferOrderNotifyResponse)
+
+    // 修改代收(测试)订单状态
+    @handler ModifyPayTestOrderStatus
+    post /order/pay-test/modify-status (ModifyPayTestOrderStatusRequest) returns ()
+
+    // 修改代付(测试)订单状态
+    @handler ModifyTransferTestOrderStatus
+    post /order/transfer-test/modify-status (ModifyTransferTestOrderStatusRequest) returns ()
+}
+
+// 代收订单列表
+type (
+    GetPayOrderListRequest {
+        Page int64 `form:"page"`
+        PageSize int64 `form:"page_size"`
+        OrderNo string `form:"order_no,optional"`
+        MerchantOrderNo string `form:"merchant_order_no,optional"`
+        UpstreamOrderNo string `form:"upstream_order_no,optional"`
+        MerchantName string `form:"merchant_name,optional"`
+        Currency string `form:"currency,optional"`
+        ChannelId int64 `form:"channel_id,optional"`
+        StartCreateTime int64 `form:"start_create_time,optional"`
+        EndCreateTime int64 `form:"end_create_time,optional"`
+        OrderStatus int64 `form:"order_status,optional"`
+        OrderType string `form:"order_type,optional"`
+    }
+
+    GetPayOrderListResponse {
+        Total int64 `json:"total"`
+        List []PayOrderList `json:"list"`
+    }
+
+    PayOrderList {
+        OrderNo string `json:"order_no"`
+        MerchantOrderNo string `json:"merchant_order_no"`
+        UpstreamOrderNo string `json:"upstream_order_no"`
+        MerchantName string `json:"merchant_name"`
+        Currency string `json:"currency"`
+        OrderAmount int64 `json:"order_amount"`
+        MerchantFee int64 `json:"merchant_fee"`
+        IncreaseAmount int64 `json:"increase_amount"`
+        UpstreamName string `json:"upstream_name"`
+        ChannelName string `json:"channel_name"`
+        OrderStatus int64 `json:"order_status"`
+        CreateTime int64 `json:"create_time"`
+        UpdateTime int64 `json:"update_time"`
+        OrderType string `json:"order_type"`
+        PaymentAmount int64 `json:"payment_amount"`               // 用户实际支付金额
+    }
+)
+
+// 代收订单详情
+type (
+    GetPayOrderDetailRequest {
+        OrderNo string `form:"order_no"`
+    }
+
+    GetPayOrderDetailResponse {
+        Data PayOrderDetail `json:"data"`
+    }
+
+    PayOrderDetail {
+        OrderNo string `json:"order_no"`                          //平台订单号
+        MerchantOrderNo string `json:"merchant_order_no"`
+        UpstreamOrderNo string `json:"upstream_order_no"`
+        MerchantName string `json:"merchant_name"`
+        MerchantNo string `json:"merchant_no"`
+        ReqAmount int64 `json:"req_amount"`                       //请求上游的金额
+        IncreaseAmount int64 `json:"increase_amount"`             //账户增加的金额
+        MerchantFee int64 `json:"merchant_fee"`                   //商户手续费
+        UpstreamFee int64 `json:"upstream_fee"`                   //上游手续费
+        OrderStatus int64 `json:"order_status"`                   //订单状态:1-待支付;2-已支付;3-超时
+        Currency string `json:"currency"`
+        CreateTime int64 `json:"create_time"`
+        UpdateTime int64 `json:"update_time"`
+        NotifyUrl string `json:"notify_url"`                      //异步通知url
+        ReturnUrl string `json:"return_url"`                      //同步跳转url
+        PlatformChannelId int64 `json:"platform_channel_id"`      //平台通道id
+        UpstreamChannelId int64 `json:"upstream_channel_id"`      //上游通道id
+        NotifyStatus int64 `json:"notify_status"`                 //	异步通知状态(0未通知,1成功,2通知进行中,3超时)
+        Subject string `json:"subject"`                           //商品的标题/交易标题/订单标题/订单关键字等
+        PlatformChannelName string `json:"platform_channel_name"` //平台通道名称
+        UpstreamChannelName string `json:"upstream_channel_name"` //上游通道名称
+        PaymentAmount int64 `json:"payment_amount"`               // 用户实际支付金额
+    }
+)
+
+// 代付订单列表
+type (
+    GetTransferOrderListRequest {
+        Page int64 `form:"page"`
+        PageSize int64 `form:"page_size"`
+        StartCreateTime int64 `form:"start_create_time,optional"`
+        EndCreateTime int64 `form:"end_create_time,optional"`
+        OrderNo string `form:"order_no,optional"`
+        MerchantOrderNo string `form:"merchant_order_no,optional"`
+        UpstreamOrderNo string `form:"upstream_order_no,optional"`
+        MerchantName string `form:"merchant_name,optional"`
+        Currency string `form:"currency,optional"`
+        ChannelId int64 `form:"channel_id,optional"`
+        OrderStatus int64 `form:"order_status,optional"`
+        OrderType string `form:"order_type,optional"`
+    }
+
+    GetTransferOrderListResponse {
+        Total int64 `json:"total"`
+        List []TransferOrderList `json:"list"`
+    }
+
+    TransferOrderList {
+        OrderNo string `json:"order_no"`
+        MerchantOrderNo string `json:"merchant_order_no"`
+        UpstreamOrderNo string `json:"upstream_order_no"`
+        MerchantName string `json:"merchant_name"`
+        Currency string `json:"currency"`
+        OrderAmount int64 `json:"order_amount"`
+        MerchantFee int64 `json:"merchant_fee"`
+        PayeeRealAmount int64 `json:"payee_real_amount"`
+        UpstreamName string `json:"upstream_name"`
+        ChannelName string `json:"channel_name"`
+        OrderStatus int64 `json:"order_status"`
+        CreateTime int64 `json:"create_time"`
+        UpdateTime int64 `json:"update_time"`
+        OrderSource int64 `json:"order_source"`
+        OrderType string `json:"order_type"`
+    }
+)
+
+// 代付订单详情
+type (
+    GetTransferOrderDetailRequest {
+        OrderNo string `form:"order_no"`
+    }
+
+    GetTransferOrderDetailResponse {
+        Data TransferOrderDetail `json:"data"`
+    }
+
+    TransferOrderDetail {
+        OrderNo string `json:"order_no"`
+        MerchantOrderNo string `json:"merchant_order_no"`
+        UpstreamOrderNo string `json:"upstream_order_no"`
+        MerchantName string `json:"merchant_name"`
+        MerchantNo string `json:"merchant_no"`
+        ReqAmount int64 `json:"req_amount"`              //订单请求金额
+        DecreaseAmount int64 `json:"decrease_amount"`    //账户扣除的金额
+        MerchantFee int64 `json:"merchant_fee"`          //	商户手续费
+        UpstreamFee int64 `json:"upstream_fee"`          //上游手续费
+        PayeeRealAmount int64 `json:"payee_real_amount"` //收款方实际到账金额
+        FeeDeductType int64 `json:"fee_deduct_type"`     //手续费扣款方式(1内扣,2外扣)
+        UpstreamAmount int64 `json:"upstream_amount"`    //请求上游的金额
+        Currency string `json:"Currency"`
+        CreateTime int64 `json:"CreateTime"`
+        UpdateTime int64 `json:"UpdateTime"`
+        NotifyUrl string `json:"notify_url"`             //	异步通知地址
+        BankName string `json:"bank_name"`               //	收款银行名称
+        CardNumber string `json:"card_number"`           //	收款卡号
+        AccountName string `json:"account_name"`         //	银行卡开户名
+        BranchName string `json:"branch_name"`           //支行名称
+        NotifyStatus int64 `json:"notify_status"`        //	异步通知状态(0未通知,1成功,2通知进行中,3超时)
+        OrderSource int64 `json:"order_source"`
+    }
+)
+
+// 商户充值订单列表
+type (
+    GetMerchantRechargeOrderListRequest {
+        Page int64 `form:"page"`
+        PageSize int64 `form:"page_size"`
+        OrderNo string `form:"order_no,optional"`
+        OrderStatus int64 `form:"order_status,optional"`
+        MerchantName string `form:"merchant_name,optional"`
+        StartCreateTime int64 `form:"start_create_time,optional"`
+        EndCreateTime int64 `form:"end_create_time,optional"`
+    }
+
+    GetMerchantRechargeOrderListResponse {
+        Total int64 `json:"total"`
+        List []MerchantRechargeOrderList `json:"list"`
+    }
+
+    MerchantRechargeOrderList {
+        OrderNo string `json:"order_no"`
+        MerchantName string `json:"merchant_name"`
+        OrderAmount int64 `json:"order_amount"`
+        RechargeRemark string `json:"recharge_remark"`
+        BankName string `json:"bank_name"`
+        PayeeName string `json:"payee_name"`
+        CardNumber string `json:"card_number"`
+        OrderStatus int64 `json:"order_status"`
+        DealWithRemark string `json:"deal_with_remark"`
+        CreateTime int64 `json:"create_time"`
+        FinishTime int64 `json:"finish_time"`
+        Currency string `json:"currency"`
+    }
+)
+
+// 商户充值订单审核
+type (
+    MerchantRechargeOrderAuditRequest {
+        OrderNo string `json:"order_no"`
+        OrderStatus int64 `json:"order_status"`
+        DealWithRemark string `json:"deal_with_remark,optional"`
+    }
+)
+
+// 商户提现订单列表
+type (
+    GetMerchantWithdrawOrderListRequest {
+        Page int64 `form:"page,default=1"`
+        PageSize int64 `form:"page_size,default=10"`
+        StartCreateTime int64 `form:"start_create_time,optional"`
+        EndCreateTime int64 `form:"end_create_time,optional"`
+        MerchantName string `form:"merchant_name,optional"`
+        OrderNo string `form:"order_no,optional"`
+        OrderStatus int64 `form:"order_status,optional"`
+    }
+
+    GetMerchantWithdrawOrderListResponse {
+        Total int64 `json:"total"`
+        List []MerchantWithdrawOrderList `json:"list"`
+    }
+
+    MerchantWithdrawOrderList {
+        OrderNo string `json:"order_no"`
+        MerchantName string `json:"merchant_name"`
+        OrderAmount int64 `json:"order_amount"`
+        MerchantFee int64 `json:"merchant_fee"`
+        RealAmount int64 `json:"real_amount"`
+        Remark string `json:"remark"`
+        BankName string `json:"bank_name"`
+        PayeeName string `json:"payee_name"`
+        CardNumber string `json:"card_number"`
+        BranchName string `json:"branch_name"`
+        AuditRemark string `json:"audit_remark"`
+        CreateTime int64 `json:"create_time"`
+        AuditTime int64 `json:"audit_time"`
+        OrderStatus int64 `json:"order_status"`
+        UpstreamOrderNo string `json:"upstream_order_no"`
+        UpstreamChannelName string `json:"upstream_channel_name"`
+        Currency string `json:"currency"`
+        DeductionMethod int64 `json:"deduction_method"`
+    }
+)
+
+// 商户提现订单审核
+type (
+    MerchantWithdrawOrderAuditRequest {
+        OrderNo string `json:"order_no"`
+        AuditStatus int64 `json:"audit_status"`
+        AuditRemark string `json:"audit_remark,optional"`
+    }
+)
+
+// 商户提现成功
+type (
+    MerchantWithdrawSuccessRequest {
+        OrderNo string `json:"order_no"`
+        Remark string `json:"remark,optional"`
+    }
+)
+
+// 上游代付通道列表
+type (
+    UpTransferChannelListRequest {
+        Currency string `form:"currency"`
+        DeductionMethod string `form:"deduction_method"`
+    }
+
+    UpTransferChannelListResponse {
+        List []UpTransferChannel `json:"list"`
+    }
+
+    UpTransferChannel {
+        ChannelId int64 `json:"channel_id"`
+        ChannelName string `json:"channel_name"`
+        ChannelCode string `json:"channel_code"`
+    }
+)
+
+// 商户提现订单派单
+type (
+    WithdrawOrderAllotRequest {
+        OrderNo string `json:"order_no"`
+    }
+    WithdrawOrderAllotResponse {
+    }
+)
+
+// 代收订单通知
+type (
+    PayOrderNotifyRequest {
+        OrderNo string `json:"order_no"`
+    }
+
+    PayOrderNotifyResponse {
+        NotifyResponse string `json:"notify_response"`
+    }
+)
+
+// 代付订单通知
+type (
+    TransferOrderNotifyRequest {
+        OrderNo string `json:"order_no"`
+    }
+
+    TransferOrderNotifyResponse {
+        NotifyResponse string `json:"notify_response"`
+    }
+)
+
+// 修改代收(测试订单)状态
+type (
+    ModifyPayTestOrderStatusRequest {
+        OrderNo string `json:"order_no"`
+        OrderStatus int64 `json:"order_status"`
+    }
+)
+
+// 修改代付(测试订单)状态
+type (
+    ModifyTransferTestOrderStatusRequest {
+        OrderNo string `json:"order_no"`
+        OrderStatus int64 `json:"order_status"`
+    }
+)

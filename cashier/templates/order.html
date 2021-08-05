@@ -1,0 +1,65 @@
+{{define "order.html"}}
+{{template "header.html" .}}
+<div class="content">
+    <div class="hint">
+        {{Lang .cLang "提示：不按照正常支付，无法及时到账，修改金额支付，不到账概不负责"}}
+    </div>
+    <div class="content_title">
+        <div class="money">{{.currencySymbol}}{{.reqAmount}}</div>
+        <div class="time">{{Lang .cLang "剩余支付时间"}}：<span id="countDownElement"></span></div>
+    </div>
+    <div class="container">
+        <div class="content_box">
+            <div class="tips">{{Lang .cLang "请付款至以下账户"}}</div>
+            <div class="item">
+                <div>{{Lang .cLang "订单"}}</div>
+                <div>{{.payOrder.MerchantOrderNo}}</div>
+            </div>
+            <!-- <div class="item">
+                <div>{{Lang .cLang "金额"}}</div>
+                <div>{{.currencySymbol}}{{.reqAmount}}</div>
+                <div data-copy='{{.currencySymbol}}{{.reqAmount}}' class="copy-btn">{{Lang .cLang "复制"}}</div>
+            </div> -->
+            <div class="item">
+                <div>{{Lang .cLang "姓名"}}</div>
+                <div>{{.card.CardHolder}}</div>
+                <div data-copy='{{.card.CardHolder}}' class="copy-btn">{{Lang .cLang "复制"}}</div>
+            </div>
+            <div class="item">
+                <div>{{Lang .cLang "卡号"}}</div>
+                <div>{{.card.CardNumber}}</div>
+                <div data-copy='{{.card.CardNumber}}' class="copy-btn">{{Lang .cLang "复制"}}</div>
+            </div>
+            <div class="item">
+                <div>{{Lang .cLang "银行"}}</div>
+                <div>{{.card.BankName}}</div>
+                <div data-copy='{{.card.BankName}}' class="copy-btn">{{Lang .cLang "复制"}}</div>
+            </div>
+            <div class="item">
+                <div>{{Lang .cLang "支行"}}</div>
+                <div>{{.card.CardOrganization}}</div>
+                <div data-copy='{{.card.CardOrganization}}' class="copy-btn">{{Lang .cLang "复制"}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+   <button>{{Lang .cLang "我已完成付款"}}</button>
+</footer>
+
+<script type="text/javascript">
+$(function () {
+    // 倒计时
+    countDownNew('countDownElement', '{{.maxTime}}');
+
+    // 复制文本
+    $(".copy-btn").click(function () {
+        var text = $(this).attr("data-copy");
+
+        copyToClipboard(this, text, '{{Lang .cLang "复制成功"}}');
+    });
+});
+</script>
+
+{{template "footer.html" .}}
+{{end}}

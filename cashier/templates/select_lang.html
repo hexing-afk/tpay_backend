@@ -1,0 +1,34 @@
+{{define "select_lang.html"}}
+<select id="changLangSelect">
+    {{range $i, $v := .cLangList}}
+        {{if eq $v "en_US"}}
+        <option value="en_US" {{if eq $.cLang "en_US"}}selected{{end}}>English</option>
+        {{end}}
+
+        {{if eq $v "zh_CN"}}
+        <option value="zh_CN" {{if eq $.cLang "zh_CN"}}selected{{end}}>中文</option>
+        {{end}}
+
+        {{if eq $v "th_TH"}}
+        <option value="th_TH" {{if eq $.cLang "th_TH"}}selected{{end}}>ไทย</option>
+        {{end}}
+
+        {{if eq $v "km_KH"}}
+        <option value="km_KH" {{if eq $.cLang "km_KH"}}selected{{end}}>ខ្មែរ</option>
+        {{end}}
+
+    {{end}}
+</select>
+<script type="text/javascript">
+$(function(){
+    $("#changLangSelect").change(function(){
+        var selectLang = $(this).find("option:selected").val();
+
+        if (selectLang != "") {
+            setCookie("{{.langCookieName}}", selectLang)
+           window.location.reload();
+        }
+    })
+});
+</script>
+{{end}}

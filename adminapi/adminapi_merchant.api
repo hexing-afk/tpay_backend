@@ -1,0 +1,440 @@
+syntax = "v1"
+
+info(
+    title: "type title here"
+    desc: "type desc here"
+    author: "type author here"
+    email: "type email here"
+    version: "type version here"
+)
+
+
+//===============================================Merchant包接口======================================================
+// 商户
+@server(
+    group: merchant
+    middleware: CheckLogin
+)
+service adminapi-api {
+    // 添加商户账号
+    @handler AddMerchant
+    post /merchant/add (AddMerchantRequest) returns (AddMerchantResponse)
+
+    // 修改商户
+    @handler ModifyMerchant
+    post /merchant/update (ModifyMerchantRequest) returns ()
+
+    // 商户列表
+    @handler GetMerchantList
+    get /merchant/list (GetMerchantListRequest) returns (GetMerchantListResponse)
+
+    // 重置商户密码
+    @handler ResetMerchantPwd
+    post /merchant/reset-pwd (ResetMerchantPwdRequest) returns ()
+
+    // 修改商户登录密码
+    @handler UpdateMerchantPwd
+    post /merchant/update-pwd (UpdateMerchantPwdRequest) returns ()
+
+     // 修改商户支付密码
+    @handler ModifyMerchantPayPwd
+    post /merchant/modify-pay-pwd (ModifyMerchantPayPwdRequest) returns ()
+
+    // 重置商户的totp秘钥
+    @handler ResetMerchantTotpSecret
+    post /merchant/reset-totp-secret (ResetMerchantTotpSecretRequest) returns (ResetMerchantTotpSecretResponse)
+
+    // 启用|禁用商户
+    @handler EnableMerchant
+    post /merchant/enable (EnableMerchantRequest) returns ()
+
+    // 修改商户余额
+    @handler ModifyMerchantBalance
+    post /merchant/modify-balance (ModifyMerchantBalanceRequest) returns ()
+
+    // 商户银行卡列表
+    @handler GetMerchantBankCardList
+    get /merchant/bank-card/list (GetMerchantBankCardListRequest) returns (GetMerchantBankCardListResponse)
+
+    // 平台通道名称列表
+    @handler GetPlatformChannelNameList
+    get /platfrom/channel-name/list (GetPlatformChannelNameListRequest) returns (GetPlatformChannelNameListResponse)
+
+    // 添加商户通道
+    @handler AddMerchantChannel
+    post /merchant/channel/add (AddMerchantChannelRequest) returns ()
+
+    // 商户通道列表
+    @handler GetMerchantChannelList
+    get /merchant/channel/list (GetMerchantChannelListRequest) returns (GetMerchantChannelListResponse)
+
+    // 修改商户通道费率
+    @handler ModifyMerchantChannelRate
+    post /merchant/channel/modify (ModifyMerchantChannelRateRequest) returns ()
+
+    // 启用|禁用商户通道
+    @handler EnableMerchantChannel
+    post /merchant/channel/enable (EnableMerchantChannelRequest) returns ()
+
+    // 删除商户通道
+    @handler DeleteMerchantChannel
+    post /merchant/channel/delete (DeleteMerchantChannelRequest) returns ()
+
+    // 商户通道上游列表
+    @handler GetMerchantChannelUpstreamList
+    get /merchant/channel-upstream/list (GetMerchantChannelUpstreamListRequest) returns (GetMerchantChannelUpstreamListResponse)
+
+    // 保存商户通道上游
+    @handler SaveMerchantChannelUpstream
+    post /merchant/channel-upstream/save (SaveMerchantChannelUpstreamRequest) returns ()
+
+    // 商户提现配置
+    @handler GetMerchantWithdrawConfig
+    get /merchant/withdraw/config (GetMerchantWithdrawConfigRequest) returns (GetMerchantWithdrawConfigResponse)
+
+    // 添加商户提现配置
+    @handler AddMerchantWithdrawConfig
+    post /merchant/withdraw-config/add (AddMerchantWithdrawConfigRequest) returns (AddMerchantWithdrawConfigResponse)
+
+    // 修改商户提现配置
+    @handler ModifyMerchantWithdrawConfig
+    post /merchant/withdraw-config/modify (ModifyMerchantWithdrawConfigRequest) returns ()
+
+    // 商户钱包变更明细列表
+    @handler GetMerchantWalletLogList
+    get /merchant/wallet-log/list (GetMerchantWalletLogListRequest) returns (GetMerchantWalletLogListResponse)
+
+    // 修改商户白名单
+    @handler UpdateMerchantIpWhitelist
+    post /merchant/ip-whitelist/update (UpdateMerchantIpWhitelistRequest) returns ()
+}
+
+// 添加商户
+type (
+    AddMerchantRequest {
+        Username         string `json:"username"`
+        Password         string `json:"password"`
+        Phone            string `json:"phone,optional"`
+        Email            string `json:"email,optional"`
+        Currency         string `json:"currency"`
+        AreaId           int64  `json:"area_id"`
+    }
+    AddMerchantResponse {
+        MerchantId int64 `json:"merchant_id"`
+    }
+)
+
+// 修改商户
+type (
+    ModifyMerchantRequest {
+        MerchantId int64  `json:"merchant_id"`
+        Phone      string `json:"phone"`
+        Email      string `json:"email"`
+    }
+)
+
+// 商户列表
+type (
+    GetMerchantListRequest {
+        Username        string `form:"username,optional"`
+        ContactDetails  string `form:"contact_details,optional"`
+        Currency        string `form:"currency,optional"`
+        StartCreateTime int64  `form:"start_create_time,optional"`
+        EndCreateTime   int64  `form:"end_create_time,optional"`
+        Page            int64  `form:"page"`
+        PageSize        int64  `form:"page_size"`
+    }
+    GetMerchantListResponse {
+        Total int64      `json:"total"`
+        List  []Merchant `json:"list"`
+    }
+
+    Merchant {
+        MerchantId       int64  `json:"merchant_id"`
+        MerchantNo       string `json:"merchant_no"`
+        Username         string `json:"username"`
+        Phone            string `json:"phone"`
+        Email            string `json:"email"`
+        Currency         string `json:"currency"`
+        CreateTime       int64  `json:"create_time"`
+        Status           int64  `json:"status"`
+        Balance          int64  `json:"balance"`
+        IpWhiteList      string `json:"ip_white_list"`
+        TotpSecret       string `json:"totp_secret"`
+        AreaName        string `json:"area_name"`
+        FrozenAmount    int64 `json:"frozen_amount"`
+    }
+)
+
+// 重置商户密码
+type (
+    ResetMerchantPwdRequest {
+        LoginUserPwd string `json:"login_user_pwd"`
+        MerchantId   int64  `json:"merchant_id"`
+    }
+)
+
+// 修改商户密码
+type (
+    UpdateMerchantPwdRequest {
+        LoginUserPwd string `json:"login_user_pwd"`
+        MerchantId   int64  `json:"merchant_id"`
+        Password       string `json:"password"`
+    }
+)
+
+// 修改商户支付密码
+type (
+    ModifyMerchantPayPwdRequest {
+        MerchantId int64 `json:"merchant_id"`
+        LoginUserPwd string `json:"login_user_pwd"`
+        PayPassword string `json:"pay_password"`
+    }
+)
+
+// 重置商户的totp秘钥
+type (
+    ResetMerchantTotpSecretRequest {
+        MerchantId int64 `json:"merchant_id"`
+    }
+    ResetMerchantTotpSecretResponse {
+        TotpSecret string `json:"totp_secret"`
+    }
+)
+
+// 启用|禁用商户
+type (
+    EnableMerchantRequest {
+        MerchantId int64 `json:"merchant_id"`
+        Enable     int64 `json:"enable,default=1,options=1|2"`
+    }
+)
+
+// 修改商户余额
+type (
+    ModifyMerchantBalanceRequest {
+        MerchantId   int64  `json:"merchant_id"`
+        OpType       int64  `json:"op_type,default=1,options=1|2"`
+        ChangeAmount int64  `json:"change_amount"`
+        Remark       string `json:"remark,optional"`
+    }
+)
+
+// 商户银行卡列表
+type (
+    GetMerchantBankCardListRequest {
+        Search   string `form:"search,optional"`
+        Page     int64  `form:"page"`
+        PageSize int64  `form:"page_size"`
+    }
+
+    GetMerchantBankCardListResponse {
+        Total int64              `json:"total"`
+        List  []MerchantBankCard `json:"list"`
+    }
+
+    MerchantBankCard {
+        CardId      int64  `json:"card_id"`
+        Username    string `json:"username"`
+        BankName    string `json:"bank_name"`
+        AccountName string `json:"account_name"`
+        CardNumber  string `json:"card_number"`
+        BranchName  string `json:"branch_name"`
+        Currency    string `json:"currency"`
+        Remark      string `json:"remark"`
+        CreateTime  int64  `json:"create_time"`
+        UpdateTime  int64  `json:"update_time"`
+    }
+)
+
+// 平台通道名称列表
+type (
+    GetPlatformChannelNameListRequest {
+        MerchantId  int64 `form:"merchant_id,optional"`
+        Status      int64 `form:"status,optional"`
+        ChannelType int64 `form:"channel_type,optional"`
+    }
+
+    GetPlatformChannelNameListResponse {
+        List []PlatformChannelNameList `json:"list"`
+    }
+
+    PlatformChannelNameList {
+        ChannelId   int64  `json:"channel_id"`
+        ChannelName string `json:"channel_name"`
+        ChannelType int64  `json:"channel_type"`
+    }
+)
+
+// 添加商户通道
+type (
+    AddMerchantChannelRequest {
+        MerchantId int64 `json:"merchant_id"`
+        ChannelId  int64 `json:"channel_id"`
+    }
+)
+
+// 商户通道列表
+type (
+    GetMerchantChannelListRequest {
+        MerchantId int64 `form:"merchant_id"`
+    }
+
+    GetMerchantChannelListResponse {
+        Total int64                 `json:"total"`
+        List  []MerchantChannelList `json:"list"`
+    }
+
+    MerchantChannelList {
+        ChannelId             int64    `json:"channel_id"`
+        MerchantId            int64    `json:"merchant_id"`
+        ChannelRate           float64  `json:"channel_rate"`
+        SingleFee             int64    `json:"single_fee"`
+        Status                int64    `json:"status"`
+        PlatformChannelName   string   `json:"platform_channel_name"`
+        PlatformChannelType   int64    `json:"platform_channel_type"`
+        UpstreamChannelWeight []string `json:"upstream_channel_weight"`
+    }
+)
+
+// 修改商户通道费率
+type (
+    ModifyMerchantChannelRateRequest {
+        ChannelId   int64   `json:"channel_id"`
+        ChannelRate float64 `json:"channel_rate,range=[0:100]"`
+        SingleFee   int64   `json:"single_fee"`
+    }
+)
+
+// 启用|禁用商户通道
+type (
+    EnableMerchantChannelRequest {
+        ChannelId int64 `json:"channel_id"`
+        Enable    int64 `json:"enable,default=1,options=1|2"`
+    }
+)
+
+// 删除商户通道
+type (
+    DeleteMerchantChannelRequest {
+        ChannelId int64 `json:"channel_id"`
+    }
+)
+
+// 商户通道上游列表
+type (
+    GetMerchantChannelUpstreamListRequest {
+        Page       int64 `form:"page"`
+        PageSize   int64 `form:"page_size"`
+        MerchantId int64 `form:"merchant_id"`
+        ChannelId  int64 `form:"channel_id"`
+    }
+
+    GetMerchantChannelUpstreamListResponse {
+        Total int64                         `json:"total"`
+        List  []MerchantChannelUpstreamList `json:"list"`
+    }
+
+    MerchantChannelUpstreamList {
+        Id                    int64  `json:"id"`
+        UpstreamChannelName   string `json:"upstream_channel_name"`
+        UpstreamChannelWeight int64  `json:"upstream_channel_weight"`
+    }
+)
+
+// 保存商户通道上游
+type (
+    SaveMerchantChannelUpstreamRequest {
+        Id                    int64 `json:"id"`
+        UpstreamChannelWeight int64 `json:"upstream_channel_weight,default=0,range=[0:1000]"`
+    }
+)
+
+// 商户提现配置
+type (
+    GetMerchantWithdrawConfigRequest {
+        MerchantId int64 `form:"merchant_id"`
+    }
+
+    GetMerchantWithdrawConfigResponse {
+        Config MerchantWithdrawConfig `json:"config"`
+    }
+
+    MerchantWithdrawConfig {
+        ConfigId        int64   `json:"config_id"`
+        SingleMinAmount int64   `json:"single_min_amount"`
+        SingleMaxAmount int64   `json:"single_max_amount"`
+        DeductionMethod int64   `json:"deduction_method"`
+        WithdrawRate    float64 `json:"withdraw_rate"`
+        SingleFee       int64   `json:"single_fee"`
+    }
+)
+
+// 添加商户提现配置
+type (
+    AddMerchantWithdrawConfigRequest {
+        MerchantId      int64   `json:"merchant_id"`
+        SingleMinAmount int64   `json:"single_min_amount"`
+        SingleMaxAmount int64   `json:"single_max_amount"`
+        WithdrawRate    float64 `json:"withdraw_rate,optional,range=[0:100]"`
+        SingleFee       int64   `json:"single_fee,optional"`
+    }
+
+    AddMerchantWithdrawConfigResponse {
+        ConfigId int64 `json:"config_id"`
+    }
+)
+
+// 修改商户提现配置
+type (
+    ModifyMerchantWithdrawConfigRequest {
+        ConfigId        int64   `json:"config_id"`
+        SingleMinAmount int64   `json:"single_min_amount"`
+        SingleMaxAmount int64   `json:"single_max_amount"`
+        WithdrawRate    float64 `json:"withdraw_rate,range=[0:100]"`
+        SingleFee       int64   `json:"single_fee"`
+    }
+)
+
+// 商户钱包变更明细列表
+type (
+    GetMerchantWalletLogListRequest {
+        Page            int64  `form:"page"`
+        PageSize        int64  `form:"page_size"`
+        SerialNo        int64  `form:"serial_no,optional"`
+        BusinessNo      string `form:"business_no,optional"`
+        MerchantAccount string `form:"merchant_account,optional"`
+        OpType          int64  `form:"op_type,optional"`
+        OrderType       int64  `form:"order_type,optional"`
+        Currency        string `form:"currency,optional"`
+        StartCreateTime int64  `form:"start_create_time,optional"`
+        EndCreateTime   int64  `form:"end_create_time,optional"`
+        IdOrBusinessNo  string `form:"id_or_business_no,optional"`
+    }
+
+    GetMerchantWalletLogListResponse {
+        Total int64                   `json:"total"`
+        List  []MerchantWalletLogList `json:"list"`
+    }
+
+    MerchantWalletLogList {
+        SerialNo           int64  `json:"serial_no"`
+        BusinessNo         string `json:"business_no"`
+        MerchantAccount    string `json:"merchant_account"`
+        Currency           string `json:"currency"`
+        ChangeAmount       int64  `json:"change_amount"`
+        ChangeAfterBalance int64  `json:"change_after_balance"`
+        OpType             int64  `json:"op_type"`
+        OrderType          int64  `json:"order_type"`
+        Remark             string `json:"remark"`
+        CreateTime         int64  `json:"createTime"`
+    }
+)
+
+// 修改商户白名单
+type (
+    UpdateMerchantIpWhitelistRequest {
+        MerchantId  int64  `json:"merchant_id"`
+        IpWhitelist string `json:"ip_white"`
+    }
+)

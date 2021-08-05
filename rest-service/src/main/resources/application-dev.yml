@@ -1,0 +1,10 @@
+spring:
+  sdk:
+    appid: 1000293
+    pfx-file: D:\\zibozhengshu.pfx
+    pfx-secret: baibai88
+    gateway: http://openapitest.tf56.com/service/api
+    mode: test
+    cb-gateway: http://127.0.0.1/a
+    merchant-userid: 6688531137034095
+    toaccountnumber: 8800013385833

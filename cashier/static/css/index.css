@@ -1,0 +1,153 @@
+header {
+    display: flex;
+    background-color: #FFFFFF;
+    height: 1.173333rem;
+    line-height: 1.173333rem;
+    padding: 0 0.426667rem;
+    font-size: 0.4rem;
+    color: #333333;
+}
+.title{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 1rem;
+    font-weight: 700;
+    font-size: 0.45rem;
+}
+.iconfont{
+    width: 0.413333rem;
+    height: 0.413333rem;
+    padding-right: 0.133333rem;
+}
+
+.iconfont img{
+    width: 100%;
+    height: 100%;
+}
+
+.content{
+    width: 100%;
+    /* height: calc(100% - 1.173333rem); */
+    box-sizing: border-box;
+    /* background-color: greenyellow; */
+}
+
+.content .hint{
+    width: 100%;
+    height: 1.4rem;
+    padding:  0.3rem;
+    box-sizing: border-box;
+    font-size: 0.3rem;
+    color: red;
+}
+
+.content .content_title{
+    width: 100%;
+    height: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.45rem;
+    background: #FFFFFF;
+    /* background-color: hotpink; */
+}
+.content .content_title .money{
+    font-weight: 700;
+    font-size: 0.55rem;
+    margin-bottom: 0.35rem;
+}
+.content .content_title .time{
+    font-size: 0.4rem;
+    margin-bottom: 0.35rem;
+}
+
+.container{
+    box-sizing: border-box;
+    padding: 0.4rem;
+}
+
+.content .content_box{
+    width: 100%;
+    /* height: calc(100% - 2.5rem); */
+    box-sizing: border-box;
+    border-radius: 0.2rem;
+    padding: 0.35rem 0.35rem 1rem;
+    font-size: 0.43rem;
+    background-color: rgb(255, 255, 255);
+}
+
+.content_box .tips{
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+}
+
+.content_box .item{
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    padding: 0.4rem 0.3rem;
+    border-bottom: 1px solid #E9E9E9;
+    /* height: 1rem; */
+    /* background-color: indigo; */
+}
+
+/**
+输入姓名 
+*/
+.content_box .item input{
+    margin-top: 0.7rem;
+    width: 7.5rem;
+    height: 1.2rem;
+    outline: none;
+    border: 1px solid rgb(173, 173, 173);
+}
+.content_box .bordernone{
+    border-bottom: none!important;
+}
+header .nopadding{
+    padding-left: 0;
+}
+
+
+
+.content_box .item div:nth-child(1){
+    width: 1.5rem;
+    /* background-color: lawngreen; */
+    text-align: right;
+    margin-right: 0.4rem;
+}
+
+.content_box .item div:nth-child(2){
+    flex: 1;
+    /* background-color: khaki; */
+    margin-right: 0.4rem;
+}
+
+.content_box .item:nth-child(1) div:nth-child(2){
+    margin-right: 0;
+}
+
+footer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    /* background-color: lawngreen; */
+}
+
+footer button{
+    /* border: 1px solid rgb(189, 189, 189); */
+    outline: none;
+    border: none;
+    background: #EE4A4A;
+    color: #fff;
+    width: 4rem;
+    padding: 0.2rem;
+    font-size: 0.4rem;
+    border-radius: 0.1rem;
+    margin-top: 1.5rem;
+}
+
+

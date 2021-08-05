@@ -1,0 +1,102 @@
+syntax = "v1"
+
+info(
+    title: "type title here"
+    desc: "type desc here"
+    author: "type author here"
+    email: "type email here"
+    version: "type version here"
+)
+
+// 公共参数
+type RequestCommonFieldT {
+    MerchantNo string `json:"merchant_no"`
+    Timestamp  int64  `json:"timestamp"`
+}
+
+// 代收接口
+type (
+    PayTestReq {
+        RequestCommonFieldT
+        Subject    string `json:"subject"`      // 商品的标题/交易标题/订单标题/订单关键字等
+        Amount     int64  `json:"amount"`       // 订单金额
+        Currency   string `json:"currency"`     // 币种
+        MchOrderNo string `json:"mch_order_no"` // 外部订单号(商户系统内部的订单号)
+        TradeType  string `json:"trade_type"`   // 交易类型
+        NotifyUrl  string `json:"notify_url"`   // 异步通知地址
+        ReturnUrl  string `json:"return_url"`   // 同步跳转地址
+        Attach     string `json:"attach"`       // 原样返回字段
+    }
+    PayTestReply {
+        MchOrderNo string `json:"mch_order_no"` // 外部订单号(商户系统内部的订单号)
+        OrderNo    string `json:"order_no"`     // 平台订单号
+        PayUrl     string `json:"pay_url"`      // 付款收银台地址
+    }
+)
+
+// 代付接口
+type (
+    TransferTestReq {
+        RequestCommonFieldT
+        Amount             int64  `json:"amount"`                    // 订单金额
+        Currency           string `json:"currency"`                  // 币种
+        MchOrderNo         string `json:"mch_order_no"`              // 外部订单号(商户系统内部的订单号)
+        TradeType          string `json:"trade_type"`                // 交易类型
+        NotifyUrl          string `json:"notify_url"`                // 异步通知地址
+        ReturnUrl          string `json:"return_url,optional"`       // 同步跳转地址
+        Attach             string `json:"attach,optional"`           // 原样返回字段
+        BankName           string `json:"bank_name"`                 // 收款银行名称
+        BankCardHolderName string `json:"bank_card_holder_name"`     // 银行卡持卡人姓名
+        BankCardNo         string `json:"bank_card_no"`              // 银行卡号
+        BankBranchName     string `json:"bank_branch_name,optional"` // 收款银行支行名称
+        BankCode           string `json:"bankCode,optional"`         // 银行代码
+        Remark             string `json:"remark,optional"`           // 付款备注
+    }
+
+    TransferTestReply {
+        MchOrderNo string `json:"mch_order_no"` // 外部订单号(商户系统内部的订单号)
+        OrderNo    string `json:"order_no"`     // 平台订单号
+        Status     int64  `json:"status"`       // 订单状态
+    }
+)
+
+// 内部系统代付接口
+type (
+    SystemTransferTestReq {
+        RequestCommonFieldT
+        Amount             int64  `json:"amount"`                    // 订单金额
+        Currency           string `json:"currency"`                  // 币种
+        MchOrderNo         string `json:"mch_order_no"`              // 外部订单号(商户系统内部的订单号)
+        TradeType          string `json:"trade_type"`                // 交易类型
+        BankName           string `json:"bank_name"`                 // 收款银行名称
+        BankCardHolderName string `json:"bank_card_holder_name"`     // 银行卡持卡人姓名
+        BankCardNo         string `json:"bank_card_no"`              // 银行卡号
+        BankCode           string `json:"bankCode,optional"`         // 银行代码
+        BankBranchName     string `json:"bank_branch_name,optional"` // 收款银行支行名称
+        OrderSource        int64  `json:"order_source"`              // 订单来源
+        Remark             string `json:"remark,optional"`           // 付款备注
+    }
+    SystemTransferTestReply {
+        MchOrderNo string `json:"mch_order_no"` // 外部订单号(商户系统内部的订单号)
+        OrderNo    string `json:"order_no"`     // 平台订单号
+        Status     int64  `json:"status"`       // 订单状态
+    }
+)
+
+@server(
+    middleware: LogRequest
+)
+service payapi-api {
+    // 代收接口
+    @handler PayTest
+    post /test/pay (PayTestReq) returns (PayTestReply)
+
+    // 代付接口
+    @handler TransferTest
+    post /test/transfer (TransferTestReq) returns (TransferTestReply)
+
+    // 内部系统代付接口
+    @handler SystemTransferTest
+    post /test/system/transfer (SystemTransferTestReq) returns (SystemTransferTestReply)
+
+}

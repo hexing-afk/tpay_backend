@@ -1,0 +1,9 @@
+说明：
+【tf56.enterprise.demo.gateway】
+文件夹下例子全部用于网关前置业务参考；
+
+【tf56.enterprise.demo.paid】
+文件夹下例子全部用于商户代付业务参考；
+
+【tf56.enterprise.enity】
+文件夹下例子全部用于商户参数配置；
